@@ -3,10 +3,12 @@
 
 #include <cassert>
 
+#include "Vector2D.h"
+
 class Snake
 {
 public:
-    enum Direction
+    enum class Direction : int
     {
         up,
         down,
@@ -15,8 +17,8 @@ public:
         max_directions
     };
 
-    explicit Snake(int x = 3, int y = 2, int length = 1, Direction dir = up)
-    : m_posX{x}, m_posY{y}, m_length{length}, m_dir{dir}
+    explicit Snake(int x, int y, int length, Direction dir)
+    : m_pos{x, y}, m_length{length}, m_dir{dir}
     {
     }
 
@@ -27,38 +29,35 @@ public:
 
     void moveSnake()
     {
-        switch(m_dir)
+        if(m_dir == Direction::up)
         {
-            case up:
-                --m_posY;
-                break;
-            case down:
-                ++m_posY;
-                break;
-            case left:
-                --m_posX;
-                break;
-            case right:
-                ++m_posX;
-                break;
-            default:
-                assert(0 && "Bad direction in updateDir()");
-
+            --m_pos.y;
+        }
+        if(m_dir == Direction::down)
+        {
+            ++m_pos.y;
+        }
+        if(m_dir == Direction::left)
+        {
+            --m_pos.x;
+        }
+        if(m_dir == Direction::right)
+        {
+            ++m_pos.x;
         }
     }
 
-    bool isOver()
+    bool isOver() const
     {
-        return ((m_posX > 9 || m_posX < 1) || (m_posY > 9 || m_posY < 1));
+        return ((m_pos.x > 8 || m_pos.x < 1) || (m_pos.y > 8 || m_pos.y < 1));
     }
 
-    int getX() { return m_posX; }
-    int getY() { return m_posY; }
+    Vector2D getPos() const { return m_pos; }
 
-    int m_posX{};
-    int m_posY{};
-    int m_length{};
-    Direction m_dir{};
+private:
+    Vector2D m_pos{3, 3};
+    int m_length{3};
+    Direction m_dir{Direction::up};
 
 };
 

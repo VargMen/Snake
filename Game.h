@@ -1,5 +1,5 @@
-#ifndef SNAKE_1_GAME_H
-#define SNAKE_1_GAME_H
+#ifndef GAME_H
+#define GAME_H
 
 #include <iostream>
 
@@ -7,14 +7,12 @@
 #include "Snake.h"
 #include "Food.h"
 
+#include "Vector2D.h"
+
 class Game
 {
 public:
-    Game() { startGame(); }
-
-    Board m_board{};
-    Snake m_snake{};
-    Food m_food{};
+    Game() = default;
 
     void startGame()
     {
@@ -29,14 +27,20 @@ public:
         std::cout << "You lose!\n";
     }
 
+private:
+    Board m_board{};
+    Snake m_snake{3, 3, 3, Snake::Direction::up};
+    Food m_food{5, 5};
+
+
     void spawnSnake()
     {
-        m_board(m_snake.getX(), m_snake.getY()) = 1;
+        m_board.setCellValue(m_snake.getPos(), Board::snake);
     }
 
     void spawnFood()
     {
-        m_board(m_food.getX(), m_food.getY()) = 2;
+        m_board.setCellValue(m_food.getPos(), Board::food);
     }
 
     Snake::Direction getInput()
@@ -63,13 +67,13 @@ public:
             switch (input)
             {
                 case 'w':
-                    return Snake::left;
+                    return Snake::Direction::left;
                 case 's':
-                    return Snake::right;
+                    return Snake::Direction::right;
                 case 'a':
-                    return Snake::up;
+                    return Snake::Direction::up;
                 case 'd':
-                    return Snake::down;
+                    return Snake::Direction::down;
                 default:
                     std::cout << "Oops, that input is invalid.  Please try again.\n";
             }
@@ -82,7 +86,7 @@ public:
 
         for (int i {0}; i < 10; ++i) {
             for (int j {0}; j < 10; ++j) {
-                switch( m_board(i, j) )
+                switch( m_board.getCellValue(Vector2D{i, j}) )
                 {
                     case 0:
                         std::cout << ' ';
@@ -107,13 +111,13 @@ public:
 
     void updateState()
     {
-        m_board(m_snake.getX(), m_snake.getY()) = 0;
+        m_board.setCellValue(m_snake.getPos(), Board::space);
 
-        m_snake.updateDir(getInput());
+        Snake::Direction newDir { getInput() };
+        m_snake.updateDir(newDir);
 
         m_snake.moveSnake();
-
-        m_board(m_snake.getX(), m_snake.getY()) = 1;
+        m_board.setCellValue(m_snake.getPos(), Board::snake);
     }
 
 };
