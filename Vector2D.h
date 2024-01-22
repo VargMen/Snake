@@ -8,6 +8,7 @@ struct Vector2D
     {
     }
 
+    bool operator==(const Vector2D& vec) const { return (x == vec.x) && (y == vec.y); }
     int x{};
     int y{};
 

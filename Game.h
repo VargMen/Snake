@@ -16,8 +16,8 @@ public:
 
     void startGame()
     {
-        spawnSnake();
-        spawnFood();
+        drawSnake();
+        drawFood();
 
         while(!m_snake.isOver())
         {
@@ -29,16 +29,17 @@ public:
 
 private:
     Board m_board{};
-    Snake m_snake{3, 3, 3, Snake::Direction::up};
+    Snake m_snake{3, 3, 1, Snake::Direction::up};
     Food m_food{5, 5};
 
 
-    void spawnSnake()
+    void drawSnake()
     {
-        m_board.setCellValue(m_snake.getPos(), Board::snake);
+        for(const auto& e: m_snake.getPos())
+            m_board.setCellValue(e, Board::snake);
     }
 
-    void spawnFood()
+    void drawFood()
     {
         m_board.setCellValue(m_food.getPos(), Board::food);
     }
@@ -84,6 +85,7 @@ private:
         for (int i{0}; i < 20; ++i)
             std::cout << '\n';
 
+        std::cout << "            Score: " << m_snake.getScore() << '\n';
         for (int i {0}; i < 10; ++i) {
             for (int j {0}; j < 10; ++j) {
                 switch( m_board.getCellValue(Vector2D{i, j}) )
@@ -109,15 +111,26 @@ private:
         }
     }
 
+
     void updateState()
     {
-        m_board.setCellValue(m_snake.getPos(), Board::space);
+        m_board.eraseBoard();
 
+        drawFood();
         Snake::Direction newDir { getInput() };
         m_snake.updateDir(newDir);
 
-        m_snake.moveSnake();
-        m_board.setCellValue(m_snake.getPos(), Board::snake);
+        if(m_snake.isAte(m_food.getPos()))
+        {
+            m_snake.levelUp();
+            m_food.makeRandomPos();
+        }
+        else
+            m_snake.moveSnake();
+
+        for(const auto& e: m_snake.getPos())
+            m_board.setCellValue(e, Board::snake);
+
     }
 
 };

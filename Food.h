@@ -14,13 +14,13 @@ public:
 
     void makeRandomPos()
     {
-        m_pos.x = Random::get(1, 9);
-        m_pos.y = Random::get(1, 9);
+        m_pos.x = Random::get(1, 8);
+        m_pos.y = Random::get(1, 8);
     }
 
     Vector2D getPos() const { return m_pos; }
 
-    Vector2D m_pos {5, 5};
+    Vector2D m_pos {};
 };
 
 
