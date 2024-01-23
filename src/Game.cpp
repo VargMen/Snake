@@ -1,4 +1,4 @@
-#include "Game.h"
+#include "../include/Game.hpp"
 
 Game::Game()
 {
@@ -58,7 +58,7 @@ void Game::displayState()
 {
     for (int i {0}; i < setting::height; ++i) {
         for (int j {0}; j < setting::width; ++j) {
-            switch( m_board.getCellValue(Vector2D{i, j}) )
+            switch( m_board.getCellValue(Point{i, j}) )
             {
                 case Board::MapSymbols::space:
                     mvaddch(i, j, ' ');

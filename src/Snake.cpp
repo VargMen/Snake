@@ -1,4 +1,4 @@
-#include "Snake.h"
+#include "../include/Snake.hpp"
 
 Snake::Snake(int x, int y, int length, Direction dir)
         : m_length{length}, m_dir{dir}
@@ -13,9 +13,9 @@ Snake::Snake(int x, int y, int length, Direction dir)
 
 }
 
-Vector2D Snake::newHeadPos()
+Point Snake::newHeadPos()
 {
-    Vector2D result { *m_snakePos.begin() };
+    Point result { *m_snakePos.begin() };
     if(m_dir == Direction::up)
     {
         --result.y;

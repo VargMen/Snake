@@ -4,7 +4,7 @@
 #include <cassert>
 #include <vector>
 
-#include "../Util/Vector2D.h"
+#include "../Util/Point.hpp"
 #include "../settings.h"
 
 class Snake
@@ -23,7 +23,7 @@ public:
 
     void updateDir(Direction dir) { m_dir = dir; }
 
-    Vector2D newHeadPos();
+    Point newHeadPos();
 
     void moveSnake();
 
@@ -31,16 +31,16 @@ public:
 
     bool isOver() const;
 
-    bool isAte(Vector2D food_pos) const { return *m_snakePos.begin() == food_pos; }
+    bool isAte(Point food_pos) const { return *m_snakePos.begin() == food_pos; }
 
     void levelUp();
 
     int getLength() const { return m_length; }
     int getScore() const { return m_score; }
-    std::vector<Vector2D> getPos() const { return m_snakePos; }
+    std::vector<Point> getPos() const { return m_snakePos; }
 
 private:
-    std::vector<Vector2D> m_snakePos{};
+    std::vector<Point> m_snakePos{};
     int m_length{};
     Direction m_dir{};
     int m_score{};

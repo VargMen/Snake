@@ -4,11 +4,11 @@
 #include <iostream>
 #include <ncurses.h>
 
-#include "../Board/Board.h"
-#include "../Snake/Snake.h"
-#include "../Food/Food.h"
+#include "Board.hpp"
+#include "Snake.hpp"
+#include "Food.hpp"
 
-#include "../Util/Vector2D.h"
+#include "../Util/Point.hpp"
 #include "../settings.h"
 
 class Game

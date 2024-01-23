@@ -1,8 +1,8 @@
 #ifndef FOOD_H
 #define FOOD_H
 
-#include "../Util/Random.h"
-#include "../Util/Vector2D.h"
+#include "../Util/Random.hpp"
+#include "../Util/Point.hpp"
 #include "../settings.h"
 
 class Food
@@ -17,17 +17,13 @@ public:
 
     void makeRandomPos()
     {
-        bool isPosFree{false};
-        while(!isPosFree)
-        {
             m_pos.x = Random::get(1, setting::height - 2);
             m_pos.y = Random::get(1, setting::width - 2);
-        }
     }
 
-    Vector2D getPos() const { return m_pos; }
+    Point getPos() const { return m_pos; }
 
-    Vector2D m_pos {};
+    Point m_pos {};
 };
 
 
