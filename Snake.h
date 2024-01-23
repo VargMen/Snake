@@ -59,6 +59,14 @@ public:
         m_snakePos.pop_back();
         m_snakePos.insert(m_snakePos.begin(), newHeadPos()); //update the head and implicitly change the coordinates of the entire snake
     }
+
+    bool isHitItself() const
+    {
+        for(int i{1}; i < m_length; ++i)
+                if(m_snakePos[0] == m_snakePos[i])
+                    return true;
+        return false;
+    }
     bool isOver() const
     {
         return ((m_snakePos.begin()->x > 8 || m_snakePos.begin()->x < 1) || (m_snakePos.begin()->y > 8 || m_snakePos.begin()->y < 1));

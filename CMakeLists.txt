@@ -12,4 +12,7 @@ add_executable(Snake_1 main.cpp
         Game.h
         Food.cpp
         Food.h
-        Random.h)
+        Random.h
+        Vector2D.h)
+
+target_link_libraries(Snake_1 ncurses)

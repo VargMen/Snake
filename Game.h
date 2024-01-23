@@ -2,6 +2,7 @@
 #define GAME_H
 
 #include <iostream>
+#include <ncurses.h>
 
 #include "Board.h"
 #include "Snake.h"
@@ -16,16 +17,25 @@ public:
 
     void startGame()
     {
-        drawSnake();
-        drawFood();
+        initscr();
+        noecho();
 
-        while(!m_snake.isOver())
-        {
+        timeout(300);
+
+        spawnSnake();
+        spawnFood();
+
+        while (!m_snake.isOver()) {
             displayState();
             updateState();
+            if(m_snake.isHitItself())
+                break;
         }
         std::cout << "You lose!\n";
+
     }
+
+    ~Game() { endwin(); }
 
 private:
     Board m_board{};
@@ -33,40 +43,21 @@ private:
     Food m_food{5, 5};
 
 
-    void drawSnake()
+    void spawnSnake()
     {
         for(const auto& e: m_snake.getPos())
             m_board.setCellValue(e, Board::snake);
     }
 
-    void drawFood()
+    void spawnFood()
     {
         m_board.setCellValue(m_food.getPos(), Board::food);
     }
 
-    Snake::Direction getInput()
-    {
-        while (true) // Loop until user enters a valid input
-        {
-            char input{};
-            std::cin >> input;
-
-            if (!std::cin) // if the previous extraction failed
-            {
-                if (std::cin.eof()) // if the stream was closed
-                {
-                    exit(0); // shut down the program now
-                }
-
-                // let's handle the failure
-                std::cin.clear(); // put us back in 'normal' operation mode
-            }
-
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-
-            // Check whether the user entered meaningful input
-            switch (input)
-            {
+    Snake::Direction getInput() {
+        char input{};
+        if ((input = getch()) != ERR) {
+            switch (input) {
                 case 'w':
                     return Snake::Direction::left;
                 case 's':
@@ -75,15 +66,15 @@ private:
                     return Snake::Direction::up;
                 case 'd':
                     return Snake::Direction::down;
-                default:
-                    std::cout << "Oops, that input is invalid.  Please try again.\n";
             }
-        } // and try again
+        }
+        return Snake::Direction::max_directions;
     }
 
     void displayState() {
-        for (int i{0}; i < 20; ++i)
-            std::cout << '\n';
+
+        move(10, 10);
+        box(stdscr, 0, 0);
 
         std::cout << "            Score: " << m_snake.getScore() << '\n';
         for (int i {0}; i < 10; ++i) {
@@ -91,16 +82,16 @@ private:
                 switch( m_board.getCellValue(Vector2D{i, j}) )
                 {
                     case 0:
-                        std::cout << ' ';
+                        mvprintw(i, j, " ");
                         break;
                     case -1:
-                        std::cout << '#';
+                        mvprintw(i, j, "#");
                         break;
                     case 1:
-                        std::cout << 'o';
+                        mvprintw(i, j, "o");
                         break;
                     case 2:
-                        std::cout << '*';
+                        mvprintw(i, j, "*");
                         break;
                     default:
                         std::cout << "Unknown symbol in board\n";
@@ -116,9 +107,11 @@ private:
     {
         m_board.eraseBoard();
 
-        drawFood();
+        spawnFood();
+
         Snake::Direction newDir { getInput() };
-        m_snake.updateDir(newDir);
+        if(newDir != Snake::Direction::max_directions)
+            m_snake.updateDir(newDir);
 
         if(m_snake.isAte(m_food.getPos()))
         {
