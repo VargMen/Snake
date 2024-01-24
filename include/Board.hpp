@@ -2,8 +2,8 @@
 #define BOARD_H
 
 #include "Snake.hpp"
-#include "../Util/Point.hpp"
-#include "../settings.h"
+#include "Point.hpp"
+#include "settings.h"
 
 class Board
 {

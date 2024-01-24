@@ -1,9 +1,9 @@
 #ifndef FOOD_H
 #define FOOD_H
 
-#include "../Util/Random.hpp"
-#include "../Util/Point.hpp"
-#include "../settings.h"
+#include "Random.hpp"
+#include "Point.hpp"
+#include "settings.h"
 
 class Food
 {
@@ -23,6 +23,7 @@ public:
 
     Point getPos() const { return m_pos; }
 
+private:
     Point m_pos {};
 };
 

@@ -1,36 +1,30 @@
-#include "../include/Snake.hpp"
+#include "Snake.hpp"
 
-Snake::Snake(int x, int y, int length, Direction dir)
-        : m_length{length}, m_dir{dir}
+Snake::Snake(const Point& pos, Direction dir)
+        : m_length{1}, m_dir{dir}
 {
-    assert(x < setting::width && x > 0 && "Bad argument x in Snake()");
-    assert(y < setting::height && y > 0 && "Bad argument y in Snake()");
-    assert(length < setting::height - y && length > 0 && "Bad argument length in Snake()");
+    assert(pos.x < setting::width && pos.x > 0 && "Bad argument x in Snake()");
+    assert(pos.y < setting::height && pos.y > 0 && "Bad argument y in Snake()");
 
-    m_snakePos.emplace_back(x, y);
-    for(int i{1}; i < m_length; ++i)
-        m_snakePos.emplace_back(x + i, y);
-
+    m_snakePos.emplace_back(pos);
 }
 
 Point Snake::newHeadPos()
 {
     Point result { *m_snakePos.begin() };
-    if(m_dir == Direction::up)
+    switch(m_dir)
     {
-        --result.y;
-    }
-    if(m_dir == Direction::down)
-    {
-        ++result.y;
-    }
-    if(m_dir == Direction::left)
-    {
-        --result.x;
-    }
-    if(m_dir == Direction::right)
-    {
-        ++result.x;
+        case Direction::up:
+            --result.x;
+            break;
+        case Direction::down:
+            ++result.x;
+            break;
+        case Direction::left:
+            --result.y;
+            break;
+        case Direction::right:
+            ++result.y;
     }
     return result;
 }

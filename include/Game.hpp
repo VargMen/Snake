@@ -8,8 +8,8 @@
 #include "Snake.hpp"
 #include "Food.hpp"
 
-#include "../Util/Point.hpp"
-#include "../settings.h"
+#include "Point.hpp"
+#include "settings.h"
 
 class Game
 {
@@ -22,7 +22,7 @@ public:
 
 private:
     Board m_board{};
-    Snake m_snake{3, 3, 1, Snake::Direction::up};
+    Snake m_snake{Point{3, 3}, Snake::Direction::up};
     Food m_food{5, 5};
     WINDOW * m_win{};
 

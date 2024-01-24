@@ -14,6 +14,12 @@ add_executable(Snake_game main.cpp
         settings.h
         include/Board.hpp
         src/Board.cpp
+
 )
+
+target_include_directories(Snake_game PUBLIC
+                                    "${CMAKE_CURRENT_SOURCE_DIR}/include/"
+                                    "${CMAKE_CURRENT_SOURCE_DIR}/Util/"
+                                    "${CMAKE_CURRENT_SOURCE_DIR}/")
 
 target_link_libraries(Snake_game ncurses)

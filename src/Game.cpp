@@ -1,4 +1,4 @@
-#include "../include/Game.hpp"
+#include "Game.hpp"
 
 Game::Game()
 {
@@ -41,17 +41,17 @@ Snake::Direction Game::getInput() {
     if ((input = getch()) != ERR) {
         switch (input) {
             case 'w':
-                return Snake::Direction::left;
-            case 's':
-                return Snake::Direction::right;
-            case 'a':
                 return Snake::Direction::up;
-            case 'd':
+            case 's':
                 return Snake::Direction::down;
-            default: ;
+            case 'a':
+                return Snake::Direction::left;
+            case 'd':
+                return Snake::Direction::right;
+            default:
+                return Snake::Direction::max_directions;
         }
     }
-    return Snake::Direction::max_directions;
 }
 
 void Game::displayState()
@@ -73,8 +73,7 @@ void Game::displayState()
                     mvaddch(i, j, '*');
                     break;
                 default:
-                    std::cout << "Unknown symbol in board\n";
-                    exit(-1);
+                    assert(0 && "Unknown symbol in board\n");
             }
         }
     }

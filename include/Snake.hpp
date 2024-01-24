@@ -4,8 +4,8 @@
 #include <cassert>
 #include <vector>
 
-#include "../Util/Point.hpp"
-#include "../settings.h"
+#include "Point.hpp"
+#include "settings.h"
 
 class Snake
 {
@@ -19,7 +19,7 @@ public:
         max_directions
     };
 
-    explicit Snake(int x, int y, int length, Direction dir);
+    explicit Snake(const Point& pos, Direction dir);
 
     void updateDir(Direction dir) { m_dir = dir; }
 
