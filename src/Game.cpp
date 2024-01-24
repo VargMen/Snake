@@ -83,21 +83,7 @@ Snake::Direction Game::getInput() {
 
                 addSpeed();
 
-                switch (nextInput)
-                {
-                    case 'w':
-                        return Snake::Direction::up;
-                    case 's':
-                        return Snake::Direction::down;
-                    case 'a':
-                        return Snake::Direction::left;
-                    case 'd':
-                        return Snake::Direction::right;
-                    default:
-                        return Snake::Direction::max_directions;
-                }
-            default:
-                return Snake::Direction::max_directions;
+                return parseToDirection(nextInput);
         }
     }
     return Snake::Direction::max_directions;
@@ -149,6 +135,11 @@ void Game::updateState()
 
     Snake::Direction newDir { getInput() };
 
+    if(newDir == -m_snake.getDir())
+    {
+        newDir = Snake::Direction::max_directions;
+    }
+
     if (newDir != Snake::Direction::max_directions) //If we don't press a key to change the direction
     {
         m_snake.updateDir(newDir);
@@ -175,13 +166,6 @@ void Game::updateState()
     }
 
     spawnSnake();
-
-    if(newDir == -lasDir && m_snake.getLength() > 1) //If our new direction is the opposite of the previous one
-    {                                                //and the snake has a tail, it is a loss
-        loseFlag = true;
-        return;
-    }
-
 }
 
 void Game::restartGame()
@@ -234,6 +218,24 @@ void Game::displayLoseState()
 
     wrefresh(m_winScore);
 }
+
+Snake::Direction Game::parseToDirection(int ch)
+{
+    switch(ch)
+    {
+        case 'w':
+            return Snake::Direction::up;
+        case 's':
+            return Snake::Direction::down;
+        case 'a':
+            return Snake::Direction::left;
+        case 'd':
+            return Snake::Direction::right;
+        default:
+            return Snake::Direction::max_directions;
+    }
+}
+
 
 inline void Game::addSpeed() { wtimeout(m_winGame, setting::speed * 100); }
 

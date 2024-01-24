@@ -5,6 +5,13 @@
 #include <ncurses.h>
 
 #include "Board.hpp"
+#ifndef GAME_H
+#define GAME_H
+
+#include <iostream>
+#include <ncurses.h>
+
+#include "Board.hpp"
 #include "Snake.hpp"
 #include "Food.hpp"
 
@@ -30,6 +37,8 @@ private:
 
     void spawnSnake();
 
+    Snake::Direction parseToDirection(int ch);
+
     void spawnFood();
 
     Snake::Direction getInput();
@@ -49,3 +58,4 @@ private:
 
 
 #endif //GAME_H
+
