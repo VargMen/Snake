@@ -26,17 +26,23 @@ private:
     Food m_food{5, 5};
     WINDOW * m_winGame{};
     WINDOW * m_winScore{};
-    bool isGamePause{false};
+    bool loseFlag{false};
+
     void spawnSnake();
 
     void spawnFood();
 
-    void pauseGame();
     Snake::Direction getInput();
 
     void displayState();
 
+    void displayLoseState();
+
     void updateState();
+
+    void addSpeed();
+
+    void stopGame();
 
     void restartGame();
 };
