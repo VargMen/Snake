@@ -35,11 +35,14 @@ void Snake::moveSnake()
     m_snakePos.insert(m_snakePos.begin(), newHeadPos()); //update the head and implicitly change the coordinates of the entire snake
 }
 
-bool Snake::isHitItself() const
+bool Snake::isHitItself()
 {
     for(int i{1}; i < m_length; ++i)
         if(m_snakePos[0] == m_snakePos[i])
+        {
+            isHitItselfFlag = true;
             return true;
+        }
     return false;
 }
 

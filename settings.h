@@ -3,7 +3,7 @@
 
 namespace setting
 {
-    constexpr int width{100};
+    constexpr int width{25};
     constexpr int height{10};
 
     constexpr int speed{2};

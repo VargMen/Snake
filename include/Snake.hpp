@@ -27,7 +27,7 @@ public:
 
     void moveSnake();
 
-    bool isHitItself() const;
+    bool isHitItself();
 
     bool isOver() const;
 
@@ -38,12 +38,13 @@ public:
     int getLength() const { return m_length; }
     int getScore() const { return m_score; }
     std::vector<Point> getPos() const { return m_snakePos; }
-
+    bool getFlagHitItself() const { return isHitItselfFlag; }
 private:
     std::vector<Point> m_snakePos{};
     int m_length{};
     Direction m_dir{};
     int m_score{};
+    bool isHitItselfFlag{false};
 };
 
 
