@@ -11,7 +11,7 @@ Snake::Snake(const Point& pos, Direction dir)
 
 Point Snake::newHeadPos()
 {
-    Point result { *m_snakePos.begin() };
+    Point result { m_snakePos.front() };
     switch(m_dir)
     {
         case Direction::up:
