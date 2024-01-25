@@ -5,18 +5,11 @@
 #include <ncurses.h>
 
 #include "Board.hpp"
-#ifndef GAME_H
-#define GAME_H
-
-#include <iostream>
-#include <ncurses.h>
-
-#include "Board.hpp"
 #include "Snake.hpp"
 #include "Food.hpp"
 
 #include "Point.hpp"
-#include "settings.h"
+#include "settings.hpp"
 
 class Game
 {
@@ -37,15 +30,25 @@ private:
 
     void spawnSnake();
 
-    Snake::Direction parseToDirection(int ch);
+    void clearWindow();
+
+    void refreshWindow();
+
+    void printScore();
+
+    void printMessageToPlayAgain();
+
+    static Snake::Direction parseToDirection(int ch);
 
     void spawnFood();
 
-    Snake::Direction getInput();
+    void spawnOnBoard(const Point& point, char symbol);
+
+    Snake::Direction getNewDirection();
+
+    int getAnswer();
 
     void displayState();
-
-    void displayLoseState();
 
     void updateState();
 
@@ -58,4 +61,3 @@ private:
 
 
 #endif //GAME_H
-

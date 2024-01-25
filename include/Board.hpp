@@ -3,7 +3,7 @@
 
 #include "Snake.hpp"
 #include "Point.hpp"
-#include "settings.h"
+#include "settings.hpp"
 
 class Board
 {
@@ -18,9 +18,9 @@ public:
     };
     Board() { initBoard(); }
 
-    int getCellValue(Point cell) const { return m_board[cell.x][cell.y]; }
+    int getCellValue(const Point& cell) const { return m_board[cell.getX()][cell.getY()]; }
 
-    void setCellValue(Point cell, MapSymbols symbol) { m_board[cell.x][cell.y] = symbol; }
+    void setCellValue(const Point& cell, const MapSymbols& symbol) { m_board[cell.getX()][cell.getY()] = symbol; }
 
     void eraseBoard();
 

@@ -5,7 +5,7 @@
 #include <vector>
 
 #include "Point.hpp"
-#include "settings.h"
+#include "settings.hpp"
 
 class Snake
 {
@@ -36,7 +36,6 @@ public:
 
     void levelUp();
 
-    int getLength() const { return m_length; }
     int getScore() const { return m_score; }
     std::vector<Point> getPos() const { return m_snakePos; }
     Direction getDir() const { return m_dir; }

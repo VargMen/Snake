@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.27)
 project(Snake_game)
 
-set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD 17) #i use 17 standard because i use std::uniform_int_distribution in Random.hpp
 
 add_executable(Snake_game main.cpp
         src/Game.cpp
@@ -11,7 +11,7 @@ add_executable(Snake_game main.cpp
         include/Snake.hpp
         Util/Random.hpp
         Util/Point.hpp
-        settings.h
+        settings.hpp
         include/Board.hpp
         src/Board.cpp
 

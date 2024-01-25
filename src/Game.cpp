@@ -4,8 +4,6 @@ Game::Game()
 {
     initscr();
     noecho();
-    int row, col;
-    getmaxyx(stdscr, row, col);
 
     m_winGame = newwin(setting::height+1, setting::width+1, 0, 0);
     m_winScore = newwin(setting::height+1, 30, 1, setting::width+2); //20 is size for window with score and etc
@@ -35,13 +33,29 @@ void Game::startGame()
             }
         }
 
-        displayLoseState();
+        //We come here when we have lost
+
+        stopGame(); //we stop the game because we want to know if the player wants to play anymore
+
+        printMessageToPlayAgain();
 
         restartGame();              //we restart game anyway
-        answer = wgetch(m_winGame);
+        answer = getAnswer();
+
         addSpeed();
 
     } while(answer == 'y');     //but proceed play if we want to do it
+}
+
+int Game::getAnswer()
+{
+    int answer{};
+
+    do {
+        answer = wgetch(m_winGame);
+    } while (answer != 'y' && answer != 'n');
+
+    return answer;
 }
 
 void Game::spawnSnake()
@@ -57,72 +71,65 @@ void Game::spawnFood()
     m_board.setCellValue(m_food.getPos(), Board::food);
 }
 
-Snake::Direction Game::getInput() {
+Snake::Direction Game::getNewDirection() {
 
     int input{};
-    int nextInput {};
 
     if ((input = wgetch(m_winGame)) != ERR) {
-        switch (input)
+        if(input == 'p')
         {
-            case 'w':
-                return Snake::Direction::up;
-            case 's':
-                return Snake::Direction::down;
-            case 'a':
-                return Snake::Direction::left;
-            case 'd':
-                return Snake::Direction::right;
-            case 'p':
-                do
-                {
-                    stopGame();
+            do
+            {
+                stopGame();
 
-                    nextInput = wgetch(m_winGame);
-                } while(nextInput == 'p');
+                input = wgetch(m_winGame);
+            } while(input == 'p');  //here we handle case when a player trying to press 'p' more than once consecutively
 
-                addSpeed();
+            addSpeed();
 
-                return parseToDirection(nextInput);
+            return parseToDirection(input);
+
+        } else {
+            return parseToDirection(input);
         }
     }
     return Snake::Direction::max_directions;
 }
 
-void Game::displayState()
+void Game::clearWindow()
 {
     wclear(m_winGame);
-    wclear(m_winScore); //I do this because "You lose!" is still printed after we restart
+    wclear(m_winScore);
+}
+
+void Game::refreshWindow()
+{
+    wrefresh(m_winScore);
+    wrefresh(m_winGame);
+}
+
+void Game::printScore()
+{
+    wmove(m_winScore, 0 , 0);
+    wprintw(m_winScore, "Score: %d", m_snake.getScore());
+
+}
+
+void Game::displayState()
+{
+    clearWindow(); //I do this because "You lose!" is still printed after we restart
 
     for (int i {0}; i < setting::height; ++i)
     {
         for (int j {0}; j < setting::width; ++j)
         {
-            switch( m_board.getCellValue(Point{i, j}) )
-            {
-                case Board::MapSymbols::space:
-                    mvwaddch(m_winGame, i, j, ' ');
-                    break;
-                case Board::MapSymbols::wall:
-                    mvwaddch(m_winGame, i, j, '#');
-                    break;
-                case Board::MapSymbols::snake:
-                    mvwaddch(m_winGame, i, j, 'o');
-                    break;
-                case Board::MapSymbols::food:
-                    mvwaddch(m_winGame, i, j, '*');
-                    break;
-                default:
-                    assert(0 && "Unknown symbol in board\n");
-            }
+            spawnOnBoard(Point{i, j}, static_cast<char>(m_board.getCellValue( Point{i, j} )));
         }
     }
 
-    wmove(m_winScore, 0 , 0);
-    wprintw(m_winScore, "Score: %d", m_snake.getScore());
+    printScore();
 
-    wrefresh(m_winScore);
-    wrefresh(m_winGame);
+    refreshWindow();
 }
 
 void Game::updateState()
@@ -131,13 +138,11 @@ void Game::updateState()
 
     spawnFood();
 
-    Snake::Direction lasDir {m_snake.getDir()};
+    Snake::Direction newDir { getNewDirection() };
 
-    Snake::Direction newDir { getInput() };
-
-    if(newDir == -m_snake.getDir())
+    if(newDir == -m_snake.getDir())    //we do not allow players to rotate the snake 180 degrees
     {
-        newDir = Snake::Direction::max_directions;
+        newDir = Snake::Direction::max_directions; //and in this case we just return previous direction
     }
 
     if (newDir != Snake::Direction::max_directions) //If we don't press a key to change the direction
@@ -145,24 +150,14 @@ void Game::updateState()
         m_snake.updateDir(newDir);
     }
 
-    if(m_snake.isAte(m_food.getPos()))
+    if(m_snake.isAte(m_food.getPos())) //if snake ate the food, we make new food
     {
         m_snake.levelUp();
+                                //we don't call moveSnake() here because we want to increase length of snake
+        m_food.makeRandomPos(); //it means we don't delete last element of snake but just add new head
 
-        while(true)
-        {
-            m_food.makeRandomPos();
-            auto it {std::find(m_snake.getPos().begin(),           //We check that the food has not spawned
-                               m_snake.getPos().end(), m_food.getPos())};//in the place where there is currently a snake
-            if(it == m_snake.getPos().end())
-            {
-                break;
-            }
-        }
-    }
-    else
-    {
-        m_snake.moveSnake();
+    } else {
+        m_snake.moveSnake(); //if we don't ate food, we just move snake
     }
 
     spawnSnake();
@@ -176,49 +171,37 @@ void Game::restartGame()
     loseFlag = false;
 }
 
-void Game::displayLoseState()
+void Game::spawnOnBoard(const Point& point, char symbol)
 {
-    wclear(m_winGame);
-    wclear(m_winScore); //I do this because "You lose!" is still printed after we restart
-
-    for (int i {0}; i < setting::height; ++i) {
-        for (int j {0}; j < setting::width; ++j) {
-            switch( m_board.getCellValue(Point{i, j}) )
-            {
-                case Board::MapSymbols::space:
-                    mvwaddch(m_winGame, i, j, ' ');
-                    break;
-                case Board::MapSymbols::wall:
-                    mvwaddch(m_winGame, i, j, '#');
-                    break;
-                case Board::MapSymbols::snake:
-                    mvwaddch(m_winGame, i, j, 'o');
-                    break;
-                case Board::MapSymbols::food:
-                    mvwaddch(m_winGame, i, j, '*');
-                    break;
-                default:
-                    assert(0 && "Unknown symbol in board\n");
-            }
-        }
+    switch( symbol )
+    {
+        case Board::MapSymbols::space:
+            mvwaddch(m_winGame, point.getX(), point.getY(), ' ');
+            break;
+        case Board::MapSymbols::wall:
+            mvwaddch(m_winGame, point.getX(), point.getY(), '#');
+            break;
+        case Board::MapSymbols::snake:
+            mvwaddch(m_winGame, point.getX(), point.getY(), 'o');
+            break;
+        case Board::MapSymbols::food:
+            mvwaddch(m_winGame, point.getX(), point.getY(), '*');
+            break;
+        default:
+            assert(0 && "Unknown symbol in board\n");
     }
+}
 
-    wmove(m_winScore, 0 , 0);
-    wprintw(m_winScore, "Score: %d", m_snake.getScore());
-    wrefresh(m_winGame);
-
-    stopGame();
-
-    wtimeout(m_winScore, -1);
-
+void Game::printMessageToPlayAgain()
+{
     wmove(m_winScore, 3 , 0);
     wprintw(m_winScore, "You lose!");
     wmove(m_winScore, 5 , 0);
     wprintw(m_winScore, "Write 'y' and try again >:D");
-
+    wmove(m_winScore, 7 , 0);
+    wprintw(m_winScore, "or 'n' otherwise :(");
     wrefresh(m_winScore);
 }
-
 Snake::Direction Game::parseToDirection(int ch)
 {
     switch(ch)
@@ -237,6 +220,6 @@ Snake::Direction Game::parseToDirection(int ch)
 }
 
 
-inline void Game::addSpeed() { wtimeout(m_winGame, setting::speed * 100); }
+inline void Game::addSpeed() { wtimeout(m_winGame, setting::pauseTime); }
 
 inline void Game::stopGame() { wtimeout(m_winGame, -1); }

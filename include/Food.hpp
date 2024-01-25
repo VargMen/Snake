@@ -3,7 +3,7 @@
 
 #include "Random.hpp"
 #include "Point.hpp"
-#include "settings.h"
+#include "settings.hpp"
 
 class Food
 {
@@ -17,8 +17,8 @@ public:
 
     void makeRandomPos()
     {
-            m_pos.x = Random::get(1, setting::height - 2);
-            m_pos.y = Random::get(1, setting::width - 2);
+            m_pos.setX() = Random::get(1, setting::height - 2);
+            m_pos.setY() = Random::get(1, setting::width - 2);
     }
 
     Point getPos() const { return m_pos; }
