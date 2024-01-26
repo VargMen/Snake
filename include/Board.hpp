@@ -18,9 +18,9 @@ public:
     };
     Board() { initBoard(); }
 
-    int getCellValue(const Point& cell) const { return m_board[cell.getX()][cell.getY()]; }
+    int getCellValue(const Point& cell) const { return m_board[cell.x][cell.y]; }
 
-    void setCellValue(const Point& cell, const MapSymbols& symbol) { m_board[cell.getX()][cell.getY()] = symbol; }
+    void setCellValue(const Point& cell, const MapSymbols& symbol) { m_board[cell.x][cell.y] = symbol; }
 
     void eraseBoard();
 

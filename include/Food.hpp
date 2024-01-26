@@ -8,17 +8,17 @@
 class Food
 {
 public:
-    explicit Food(int x, int y)
-        : m_pos{x, y}
+    explicit Food(const Point& pos)
+        : m_pos{ pos }
     {
-        assert(x < setting::height && x > 0 && "Bad argument x in Food()");
-        assert(y < setting::width && y > 0 && "Bad argument y in Food()");
+        assert(pos.x < setting::height && pos.x > 0 && "Bad argument x in Food()");
+        assert(pos.y < setting::width && pos.y > 0 && "Bad argument y in Food()");
     }
 
     void makeRandomPos()
     {
-            m_pos.setX() = Random::get(1, setting::height - 2);
-            m_pos.setY() = Random::get(1, setting::width - 2);
+            m_pos.x = Random::get(1, setting::height - 2);
+            m_pos.y= Random::get(1, setting::width - 2);
     }
 
     Point getPos() const { return m_pos; }

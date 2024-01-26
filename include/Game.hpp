@@ -23,7 +23,7 @@ public:
 private:
     Board m_board{};
     Snake m_snake{Point{3, 3}, Snake::Direction::up};
-    Food m_food{5, 5};
+    Food m_food{Point{5, 5} };
     WINDOW * m_winGame{};
     WINDOW * m_winScore{};
     bool loseFlag{false};

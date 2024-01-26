@@ -3,8 +3,8 @@
 Snake::Snake(const Point& pos, const Direction& dir)
         : m_length{1}, m_dir{dir}
 {
-    assert(pos.getX() < setting::width && pos.getX() > 0 && "Bad argument x in Snake()");
-    assert(pos.getY() < setting::height && pos.getY() > 0 && "Bad argument y in Snake()");
+    assert(pos.x < setting::width && pos.x > 0 && "Bad argument x in Snake()");
+    assert(pos.y < setting::height && pos.y > 0 && "Bad argument y in Snake()");
 
     m_snakePos.emplace_back(pos);
 }
@@ -15,16 +15,16 @@ Point Snake::newHeadPos()
     switch(m_dir)
     {
         case Direction::up:
-            --result.setX();
+            --result.x;
             break;
         case Direction::down:
-            ++result.setX();
+            ++result.x;
             break;
         case Direction::left:
-            --result.setY();
+            --result.y;
             break;
         case Direction::right:
-            ++result.setY();
+            ++result.y;
     }
     return result;
 }
@@ -47,8 +47,8 @@ bool Snake::isHitItself()
 
 bool Snake::isOver() const
 {
-    return ((m_snakePos.begin()->getX() > setting::height - 2 || m_snakePos.begin()->getX() < 1) ||
-            (m_snakePos.begin()->getY() > setting::width-2 || m_snakePos.begin()->getY() < 1));
+    return ((m_snakePos.begin()->x > setting::height - 2 || m_snakePos.begin()->x < 1) ||
+            (m_snakePos.begin()->y > setting::width-2 || m_snakePos.begin()->y < 1));
 }
 
 void Snake::levelUp()
@@ -56,6 +56,8 @@ void Snake::levelUp()
     m_snakePos.insert(m_snakePos.begin(), newHeadPos());
     ++m_length;
     ++m_score;
+    if(m_pauseTime > 100)
+        m_pauseTime -= 20;
 }
 
 Snake::Direction operator-(const Snake::Direction& dir)

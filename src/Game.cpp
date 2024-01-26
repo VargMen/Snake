@@ -134,6 +134,7 @@ void Game::displayState()
 
 void Game::updateState()
 {
+    addSpeed(); //if the pause time changes, we set these changes here
     m_board.eraseBoard();
 
     spawnFood();
@@ -167,7 +168,7 @@ void Game::restartGame()
 {
     m_board = Board{};
     m_snake = Snake{Point{3, 3}, Snake::Direction::up};
-    m_food = Food{5, 5};
+    m_food = Food{Point{5, 5}};
     loseFlag = false;
 }
 
@@ -176,16 +177,16 @@ void Game::spawnOnBoard(const Point& point, char symbol)
     switch( symbol )
     {
         case Board::MapSymbols::space:
-            mvwaddch(m_winGame, point.getX(), point.getY(), ' ');
+            mvwaddch(m_winGame, point.x, point.y, ' ');
             break;
         case Board::MapSymbols::wall:
-            mvwaddch(m_winGame, point.getX(), point.getY(), '#');
+            mvwaddch(m_winGame, point.x, point.y, '#');
             break;
         case Board::MapSymbols::snake:
-            mvwaddch(m_winGame, point.getX(), point.getY(), 'o');
+            mvwaddch(m_winGame, point.x, point.y, 'o');
             break;
         case Board::MapSymbols::food:
-            mvwaddch(m_winGame, point.getX(), point.getY(), '*');
+            mvwaddch(m_winGame, point.x, point.y, '*');
             break;
         default:
             assert(0 && "Unknown symbol in board\n");
@@ -220,6 +221,6 @@ Snake::Direction Game::parseToDirection(int ch)
 }
 
 
-inline void Game::addSpeed() { wtimeout(m_winGame, setting::pauseTime); }
+inline void Game::addSpeed() { wtimeout(m_winGame, m_snake.getPauseTime()); }
 
 inline void Game::stopGame() { wtimeout(m_winGame, -1); }
