@@ -29,6 +29,15 @@ Point Snake::newHeadPos()
     return result;
 }
 
+void Snake::updateDir(const Direction& dir)
+{
+    if(dir != Direction::max_directions)
+    {
+        m_dir = dir;
+    }
+}
+
+
 void Snake::moveSnake()
 {
     m_snakePos.pop_back();
@@ -45,19 +54,15 @@ bool Snake::isHitItself()
     return false;
 }
 
-bool Snake::isOver() const
-{
-    return ((m_snakePos.begin()->x > setting::height - 2 || m_snakePos.begin()->x < 1) ||
-            (m_snakePos.begin()->y > setting::width-2 || m_snakePos.begin()->y < 1));
-}
-
 void Snake::levelUp()
 {
     m_snakePos.insert(m_snakePos.begin(), newHeadPos());
+
     ++m_length;
     ++m_score;
-    if(m_pauseTime > 100)
-        m_pauseTime -= 20;
+
+    if(m_pauseTime > setting::smallestPauseTime)
+        m_pauseTime -= setting::pauseTimeReduceStep;
 }
 
 Snake::Direction operator-(const Snake::Direction& dir)

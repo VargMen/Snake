@@ -6,7 +6,7 @@ Game::Game()
     noecho();
 
     m_winGame = newwin(setting::height+1, setting::width+1, 0, 0);
-    m_winScore = newwin(setting::height+1, 30, 1, setting::width+2); //20 is size for window with score and etc
+    m_winScore = newwin(setting::height+1, 30, 1, setting::width+2); //30 is size for window with score and etc
 
     curs_set(0);
     nodelay(m_winGame, TRUE);
@@ -23,7 +23,7 @@ void Game::startGame()
         spawnSnake();
         spawnFood();
 
-        while (!loseFlag && !m_snake.isOver()) {
+        while (!loseFlag && !isOver()) {
             displayState();
             updateState();
 
@@ -39,8 +39,9 @@ void Game::startGame()
 
         printMessageToPlayAgain();
 
-        restartGame();              //we restart game anyway
         answer = getAnswer();
+
+        restartGame();              //we restart game anyway
 
         addSpeed();
 
@@ -83,6 +84,7 @@ Snake::Direction Game::getNewDirection() {
                 stopGame();
 
                 input = wgetch(m_winGame);
+
             } while(input == 'p');  //here we handle case when a player trying to press 'p' more than once consecutively
 
             addSpeed();
@@ -135,6 +137,7 @@ void Game::displayState()
 void Game::updateState()
 {
     addSpeed(); //if the pause time changes, we set these changes here
+
     m_board.eraseBoard();
 
     spawnFood();
@@ -146,16 +149,14 @@ void Game::updateState()
         newDir = Snake::Direction::max_directions; //and in this case we just return previous direction
     }
 
-    if (newDir != Snake::Direction::max_directions) //If we don't press a key to change the direction
-    {
-        m_snake.updateDir(newDir);
-    }
+    m_snake.updateDir(newDir);
 
     if(m_snake.isAte(m_food.getPos())) //if snake ate the food, we make new food
     {
-        m_snake.levelUp();
-                                //we don't call moveSnake() here because we want to increase length of snake
-        m_food.makeRandomPos(); //it means we don't delete last element of snake but just add new head
+        m_snake.levelUp();                              //we don't call moveSnake() here because we want to increase length of snake
+        do {                                            //it means we don't delete last element of snake but just add new head
+            m_food.makeRandomPos();
+        } while(m_board.isPosWall(m_food.getPos()));//we do this so that the food's position is not a wall's position
 
     } else {
         m_snake.moveSnake(); //if we don't ate food, we just move snake
@@ -166,7 +167,7 @@ void Game::updateState()
 
 void Game::restartGame()
 {
-    m_board = Board{};
+    m_board = Board{setting::mapPath};
     m_snake = Snake{Point{3, 3}, Snake::Direction::up};
     m_food = Food{Point{5, 5}};
     loseFlag = false;
@@ -203,6 +204,7 @@ void Game::printMessageToPlayAgain()
     wprintw(m_winScore, "or 'n' otherwise :(");
     wrefresh(m_winScore);
 }
+
 Snake::Direction Game::parseToDirection(int ch)
 {
     switch(ch)
@@ -218,6 +220,16 @@ Snake::Direction Game::parseToDirection(int ch)
         default:
             return Snake::Direction::max_directions;
     }
+}
+
+bool Game::isOver() const
+{
+    for(auto snakePartPos : m_snake.getPos())
+    {
+        if(m_board.isPosWall(snakePartPos))
+            return true;
+    }
+    return false;
 }
 
 

@@ -15,6 +15,7 @@ public:
         assert(pos.y < setting::width && pos.y > 0 && "Bad argument y in Food()");
     }
 
+
     void makeRandomPos()
     {
             m_pos.x = Random::get(1, setting::height - 2);
@@ -24,6 +25,7 @@ public:
     Point getPos() const { return m_pos; }
 
 private:
+
     Point m_pos {};
 };
 

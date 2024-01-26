@@ -19,27 +19,34 @@ public:
         max_directions
     };
 
-    friend Direction operator-(const Direction& dir);
     explicit Snake(const Point& pos, const Direction& dir);
 
-    void updateDir(const Direction& dir) { m_dir = dir; }
+    friend Direction operator-(const Direction& dir);
+
+    void updateDir(const Direction& dir);
+
 
     Point newHeadPos();
 
     void moveSnake();
 
-    bool isHitItself();
-
-    bool isOver() const;
-
-    bool isAte(const Point& food_pos) const { return m_snakePos.front() == food_pos; }
 
     void levelUp();
 
+
+    bool isHitItself();
+
+    bool isAte(const Point& food_pos) const { return m_snakePos.front() == food_pos; }
+
+
     int getScore() const { return m_score; }
+
     std::vector<Point> getPos() const { return m_snakePos; }
+
     Direction getDir() const { return m_dir; }
+
     int getPauseTime() const { return m_pauseTime; }
+
 private:
     std::vector<Point> m_snakePos{};
     int m_length{};
