@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <ncurses.h>
+#include <stack>
 
 #include "Board.hpp"
 #include "Snake.hpp"
@@ -23,14 +24,25 @@ public:
 private:
 
     Board m_board{setting::mapPath};
-    Snake m_snake{Point{3, 3}, Snake::Direction::up};
+
+    std::vector<Snake> m_players{};
+
+    std::stack<int> inputs{};
+
+    int m_pauseTime {setting::firstPauseTime};
+
     Food m_food{Point{5, 5} };
+
     WINDOW * m_winGame{};
     WINDOW * m_winScore{};
-    bool loseFlag{false};
 
-    bool isOver() const;
+    inline void stopGame() { wtimeout(m_winGame, -1); }
 
+    inline void addSpeed() { timeout(m_pauseTime); }
+
+    int whoLose();
+
+    bool handleOver(int whoLose);
 
     void spawnSnake();
 
@@ -38,6 +50,7 @@ private:
 
     void spawnOnBoard(const Point& point, char symbol);
 
+    std::vector<Snake::Direction> parseStack();
 
     void clearWindow();
 
@@ -45,28 +58,27 @@ private:
 
     void printScore();
 
-    void printMessageToPlayAgain();
-
 
     static Snake::Direction parseToDirection(int ch);
 
-    Snake::Direction getNewDirection();
+    void setNewDirections(std::vector<Snake::Direction>& directions);
 
+    void getInputs();
+
+
+    void restartGame();
+
+    void printMessageToPlayAgain();
 
     int getAnswer();
 
+    static bool isPosAnotherSnake(const Point& pos, const Snake& anotherSnake);
 
     void displayState();
 
     void updateState();
 
-
-    void addSpeed();
-
-    void stopGame();
-
-
-    void restartGame();
+    void updatePauseTime();
 };
 
 

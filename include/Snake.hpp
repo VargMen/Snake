@@ -45,7 +45,7 @@ public:
 
     Direction getDir() const { return m_dir; }
 
-    int getPauseTime() const { return m_pauseTime; }
+    Point getHead() const { return m_snakePos[0]; }
 
 private:
     std::vector<Point> m_snakePos{};

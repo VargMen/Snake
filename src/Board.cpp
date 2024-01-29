@@ -16,6 +16,7 @@ bool Board::isPosWall(const Point& pos) const
     return m_clearBoard[pos.x][pos.y] == wall;
 }
 
+
 void Board::initByMap(std::string_view mapName) {
     std::ifstream file(mapName.data());
     if (!file.is_open())

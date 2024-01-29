@@ -60,9 +60,6 @@ void Snake::levelUp()
 
     ++m_length;
     ++m_score;
-
-    if(m_pauseTime > setting::smallestPauseTime)
-        m_pauseTime -= setting::pauseTimeReduceStep;
 }
 
 Snake::Direction operator-(const Snake::Direction& dir)

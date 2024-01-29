@@ -31,7 +31,6 @@ public:
 
     bool isPosWall(const Point& pos) const;
 
-
     void eraseBoard();
 
 private:

@@ -11,41 +11,56 @@ Game::Game()
     curs_set(0);
     nodelay(m_winGame, TRUE);
 
+    keypad(stdscr, TRUE);
+
     addSpeed();
+
+    m_players.emplace_back(Point{3, 3}, Snake::Direction::down );
+    m_players.emplace_back(Point{6, 6}, Snake::Direction::down );
+}
+
+bool Game::handleOver(int whoLose)
+{
+    if(whoLose == 0)
+    {
+        wmove(m_winGame, setting::width/2, setting::height/2);
+        wprintw(m_winGame, "Player 1 is over!");
+        wrefresh(m_winGame);
+        return true;
+    }
+
+    if(whoLose == 1)
+    {
+        wmove(m_winGame, setting::width/2, setting::height/2);
+        wprintw(m_winGame, "Player 2 is over!");
+        wrefresh(m_winGame);
+        return true;
+    }
+
+    return false;
 }
 
 void Game::startGame()
 {
-    int answer{};
+    spawnSnake();
+    spawnFood();
 
     do
     {
-        spawnSnake();
-        spawnFood();
-
-        while (!loseFlag && !isOver()) {
+        while (!handleOver(whoLose()))
+        {
             displayState();
             updateState();
-
-            if (m_snake.isHitItself())
-            {
-                loseFlag = true;
-            }
         }
-
-        //We come here when we have lost
-
-        stopGame(); //we stop the game because we want to know if the player wants to play anymore
 
         printMessageToPlayAgain();
 
-        answer = getAnswer();
+        restartGame();
 
-        restartGame();              //we restart game anyway
+        stopGame();
 
-        addSpeed();
+    } while(getAnswer() == 'y');
 
-    } while(answer == 'y');     //but proceed play if we want to do it
 }
 
 int Game::getAnswer()
@@ -59,11 +74,38 @@ int Game::getAnswer()
     return answer;
 }
 
+
+void Game::printMessageToPlayAgain()
+{
+    wmove(m_winScore, 3 , 0);
+    wprintw(m_winScore, "You lose!");
+    wmove(m_winScore, 5 , 0);
+    wprintw(m_winScore, "Write 'y' and try again >:D");
+    wmove(m_winScore, 7 , 0);
+    wprintw(m_winScore, "or 'n' otherwise :(");
+    wrefresh(m_winScore);
+}
+
+void Game::restartGame()
+{
+    m_board = Board{setting::mapPath};
+
+    m_players.clear();
+
+    m_players.emplace_back(Point{3, 3}, Snake::Direction::down );
+    m_players.emplace_back(Point{6, 6}, Snake::Direction::down );
+
+    m_food = Food{Point{5, 5}};
+}
+
 void Game::spawnSnake()
 {
-    for(const auto& e: m_snake.getPos())
+    for(const auto& player: m_players)
     {
-        m_board.setCellValue(e, Board::snake);
+        for(const auto& pos: player.getPos())
+        {
+            m_board.setCellValue(pos, Board::snake);
+        }
     }
 }
 
@@ -72,30 +114,91 @@ void Game::spawnFood()
     m_board.setCellValue(m_food.getPos(), Board::food);
 }
 
-Snake::Direction Game::getNewDirection() {
+void Game::getInputs()
+{
+    const int desired_duration_ms = m_pauseTime;
 
-    int input{};
+    auto start_time = std::chrono::high_resolution_clock::now();
 
-    if ((input = wgetch(m_winGame)) != ERR) {
-        if(input == 'p')
-        {
-            do
-            {
-                stopGame();
+    while (true) {
+        inputs.push(getch());
 
-                input = wgetch(m_winGame);
+        auto current_time = std::chrono::high_resolution_clock::now();
+        auto elapsed_time = std::chrono::duration_cast<std::chrono::milliseconds>(current_time - start_time).count();
 
-            } while(input == 'p');  //here we handle case when a player trying to press 'p' more than once consecutively
-
-            addSpeed();
-
-            return parseToDirection(input);
-
-        } else {
-            return parseToDirection(input);
+        if (elapsed_time >= desired_duration_ms) {
+            break;  // Вихід з циклу, коли час пройшов
         }
     }
-    return Snake::Direction::max_directions;
+}
+
+std::vector<Snake::Direction> Game::parseStack()
+{
+    std::vector<Snake::Direction> directions(2); // 2 is number of players
+
+    bool dirOne {false};
+    bool dirTwo {false};
+
+    while(!inputs.empty())
+    {
+        int current { inputs.top() };
+
+        if(current != ERR)
+        {
+            if(current == 'p')
+            {
+                do {
+                    stopGame();
+
+                    current = wgetch(m_winGame);
+
+                } while (current ==
+                         'p');  //here we handle case when a player trying to press 'p' more than once consecutively
+
+                addSpeed();
+            }
+            if(!dirOne && (current == 'w' || current == 's' || current == 'a' || current == 'd'))
+            {
+                dirOne = true; //we keep the direction we met first for player 1
+
+                directions[0] = parseToDirection(current);
+            }
+            if(!dirTwo && (current == KEY_UP || current == KEY_DOWN || current == KEY_LEFT || current == KEY_RIGHT))
+            {
+                dirTwo = true;//we keep the direction we met first for player 2
+
+                directions[1] = parseToDirection(current);
+            }
+        }
+        inputs.pop();
+    }
+
+    if(!dirOne)
+    {
+        directions[0] = Snake::Direction::max_directions;
+    }
+    if(!dirTwo)
+    {
+        directions[1] = Snake::Direction::max_directions;
+    }
+
+    return directions;
+}
+
+void Game::setNewDirections(std::vector<Snake::Direction>& directions)
+{
+    size_t i{0};
+
+    for(auto& player: m_players)
+    {
+        if (directions[i] == -player.getDir())
+        {
+            directions[i] = Snake::Direction::max_directions;
+        }
+        player.updateDir(directions[i]);
+        ++i;
+    }
+
 }
 
 void Game::clearWindow()
@@ -110,16 +213,11 @@ void Game::refreshWindow()
     wrefresh(m_winGame);
 }
 
-void Game::printScore()
-{
-    wmove(m_winScore, 0 , 0);
-    wprintw(m_winScore, "Score: %d", m_snake.getScore());
-
-}
 
 void Game::displayState()
 {
     clearWindow(); //I do this because "You lose!" is still printed after we restart
+
 
     for (int i {0}; i < setting::height; ++i)
     {
@@ -134,43 +232,45 @@ void Game::displayState()
     refreshWindow();
 }
 
+
+void Game::updatePauseTime()
+{
+    if(m_pauseTime > setting::smallestPauseTime)
+        m_pauseTime -= setting::pauseTimeReduceStep;
+    addSpeed();
+}
+
+
 void Game::updateState()
 {
-    addSpeed(); //if the pause time changes, we set these changes here
-
     m_board.eraseBoard();
 
     spawnFood();
 
-    Snake::Direction newDir { getNewDirection() };
+    getInputs();
 
-    if(newDir == -m_snake.getDir())    //we do not allow players to rotate the snake 180 degrees
+    std::vector<Snake::Direction> newDirections { parseStack() };
+
+    setNewDirections(newDirections);
+
+    for(auto& player: m_players)
     {
-        newDir = Snake::Direction::max_directions; //and in this case we just return previous direction
-    }
+        if(player.isAte(m_food.getPos())) //if snake ate the food, we make new food
+        {
+            player.levelUp();                              //we don't call moveSnake() here because we want to increase length of snake
+            do {                                            //it means we don't delete last element of snake but just add new head
+                m_food.makeRandomPos();
 
-    m_snake.updateDir(newDir);
+            } while(m_board.isPosWall(m_food.getPos()));//we do this so that the food's position is not a wall's position
 
-    if(m_snake.isAte(m_food.getPos())) //if snake ate the food, we make new food
-    {
-        m_snake.levelUp();                              //we don't call moveSnake() here because we want to increase length of snake
-        do {                                            //it means we don't delete last element of snake but just add new head
-            m_food.makeRandomPos();
-        } while(m_board.isPosWall(m_food.getPos()));//we do this so that the food's position is not a wall's position
+            updatePauseTime(); //update speed
 
-    } else {
-        m_snake.moveSnake(); //if we don't ate food, we just move snake
+        } else {
+            player.moveSnake(); //if we don't ate food, we just move snake
+        }
     }
 
     spawnSnake();
-}
-
-void Game::restartGame()
-{
-    m_board = Board{setting::mapPath};
-    m_snake = Snake{Point{3, 3}, Snake::Direction::up};
-    m_food = Food{Point{5, 5}};
-    loseFlag = false;
 }
 
 void Game::spawnOnBoard(const Point& point, char symbol)
@@ -194,45 +294,68 @@ void Game::spawnOnBoard(const Point& point, char symbol)
     }
 }
 
-void Game::printMessageToPlayAgain()
-{
-    wmove(m_winScore, 3 , 0);
-    wprintw(m_winScore, "You lose!");
-    wmove(m_winScore, 5 , 0);
-    wprintw(m_winScore, "Write 'y' and try again >:D");
-    wmove(m_winScore, 7 , 0);
-    wprintw(m_winScore, "or 'n' otherwise :(");
-    wrefresh(m_winScore);
-}
 
 Snake::Direction Game::parseToDirection(int ch)
 {
     switch(ch)
     {
         case 'w':
+        case KEY_UP:
             return Snake::Direction::up;
         case 's':
+        case KEY_DOWN:
             return Snake::Direction::down;
         case 'a':
+        case KEY_LEFT:
             return Snake::Direction::left;
         case 'd':
+        case KEY_RIGHT:
             return Snake::Direction::right;
         default:
             return Snake::Direction::max_directions;
     }
 }
 
-bool Game::isOver() const
+
+void Game::printScore()
 {
-    for(auto snakePartPos : m_snake.getPos())
+    wmove(m_winScore, 0, 0);
+    wprintw(m_winScore, "Player1 : %d",  m_players[0].getScore());
+
+    wmove(m_winScore, 2, 0);
+    wprintw(m_winScore, "Player2 : %d",  m_players[1].getScore());
+}
+
+
+bool Game::isPosAnotherSnake(const Point& pos, const Snake& anotherSnake)
+{
+    for(const auto& anotherPos: anotherSnake.getPos())
     {
-        if(m_board.isPosWall(snakePartPos))
+        if(pos == anotherPos)
             return true;
     }
     return false;
 }
 
 
-inline void Game::addSpeed() { wtimeout(m_winGame, m_snake.getPauseTime()); }
+int Game::whoLose()
+{
+    int counter{0};
+    for(const auto& player: m_players)
+    {
+        for(const auto& pos: player.getPos())
+        {
+            if(m_board.isPosWall(pos))
+                return counter;
+        }
+        ++counter;
+    }
 
-inline void Game::stopGame() { wtimeout(m_winGame, -1); }
+    if(isPosAnotherSnake(m_players[0].getHead(), m_players[1]) || m_players[0].isHitItself())
+        return 0;
+
+    if(isPosAnotherSnake(m_players[1].getHead(), m_players[0])|| m_players[1].isHitItself())
+        return 1;
+
+    return -1;
+}
