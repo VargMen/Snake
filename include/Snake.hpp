@@ -3,6 +3,7 @@
 
 #include <cassert>
 #include <vector>
+#include <iostream>
 
 #include "Point.hpp"
 #include "settings.hpp"
@@ -10,6 +11,8 @@
 class Snake
 {
 public:
+    friend class Player;
+
     enum class Direction
     {
         up,
@@ -17,7 +20,20 @@ public:
         left,
         right,
         max_directions
+
     };
+
+    static std::string printDir(const Direction& dir)
+    {
+        switch(dir)
+        {
+            case Direction::up: return "up";
+            case Direction::down: return "down";
+            case Direction::left: return "left";
+            case Direction::right: return "right";
+            default: return "???";
+        }
+    }
 
     explicit Snake(const Point& pos, const Direction& dir);
 
@@ -52,7 +68,7 @@ private:
     int m_length{};
     Direction m_dir{};
     int m_score{};
-    int m_pauseTime{setting::firstPauseTime};
+    int m_pauseTime{settings::firstPauseTime};
 };
 
 

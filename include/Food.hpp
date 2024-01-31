@@ -11,15 +11,15 @@ public:
     explicit Food(const Point& pos)
         : m_pos{ pos }
     {
-        assert(pos.x < setting::height && pos.x > 0 && "Bad argument x in Food()");
-        assert(pos.y < setting::width && pos.y > 0 && "Bad argument y in Food()");
+        assert(pos.x < settings::height && pos.x > 0 && "Bad argument x in Food()");
+        assert(pos.y < settings::width && pos.y > 0 && "Bad argument y in Food()");
     }
 
 
     void makeRandomPos()
     {
-            m_pos.x = Random::get(1, setting::height - 2);
-            m_pos.y= Random::get(1, setting::width - 2);
+            m_pos.x = Random::get(1, settings::height - 2);
+            m_pos.y= Random::get(1, settings::width - 2);
     }
 
     Point getPos() const { return m_pos; }

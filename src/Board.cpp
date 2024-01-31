@@ -4,9 +4,9 @@
 
 void Board::eraseBoard()
 {
-    for(int i{1}; i < setting::height - 1; ++i)
+    for(int i{1}; i < settings::height - 1; ++i)
     {
-        for(int j{1}; j < setting::width - 1; ++j)
+        for(int j{1}; j < settings::width - 1; ++j)
         m_board[i][j] = m_clearBoard[i][j];
     }
 }
@@ -24,12 +24,12 @@ void Board::initByMap(std::string_view mapName) {
         assert(0 && "File is not found in function initByMap()");
     }
 
-    for (int i {0}; i < setting::height; ++i)
+    for (int i {0}; i < settings::height; ++i)
     {
         std::string line;
         std::getline(file, line);
 
-        for (int j {0}; j < setting::width; ++j)
+        for (int j {0}; j < settings::width; ++j)
         {
             char symbol = line[j];
             switch (symbol) {

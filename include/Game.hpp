@@ -8,6 +8,7 @@
 #include "Board.hpp"
 #include "Snake.hpp"
 #include "Food.hpp"
+#include "Player.hpp"
 
 #include "Point.hpp"
 #include "settings.hpp"
@@ -23,22 +24,22 @@ public:
 
 private:
 
-    Board m_board{setting::mapPath};
+    Board m_board{settings::mapPath};
 
-    std::vector<Snake> m_players{};
+    std::vector<Player> m_players;
 
-    std::stack<int> inputs{};
+    std::vector<int> m_inputs{};
 
-    int m_pauseTime {setting::firstPauseTime};
+    int m_pauseTime {settings::firstPauseTime};
 
     Food m_food{Point{5, 5} };
 
     WINDOW * m_winGame{};
     WINDOW * m_winScore{};
 
-    inline void stopGame() { wtimeout(m_winGame, -1); }
+    void setPlayersKeys();
 
-    inline void addSpeed() { timeout(m_pauseTime); }
+    void setPlayers();
 
     int whoLose();
 
@@ -50,16 +51,11 @@ private:
 
     void spawnOnBoard(const Point& point, char symbol);
 
-    std::vector<Snake::Direction> parseStack();
-
     void clearWindow();
 
     void refreshWindow();
 
     void printScore();
-
-
-    static Snake::Direction parseToDirection(int ch);
 
     void setNewDirections(std::vector<Snake::Direction>& directions);
 
@@ -79,6 +75,8 @@ private:
     void updateState();
 
     void updatePauseTime();
+
+    void handleInput(std::vector<Snake::Direction>& newDirs);
 };
 
 

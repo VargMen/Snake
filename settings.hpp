@@ -2,8 +2,9 @@
 #define SETTINGS_H
 
 #include <string_view>
+#include <array>
 
-namespace setting
+namespace settings
 {
     constexpr int width{40};
     constexpr int height{21};
@@ -17,6 +18,15 @@ namespace setting
 
     constexpr int pauseTimeReduceStep{20};
 
+    constexpr int playersAmount {2};
+
+    constexpr int keyNums {4};
+
+    constexpr std::array<std::array<char, keyNums>, playersAmount> allKeys
+    {{
+             {'t', 'g', 'f', 'h'},
+             {'i', 'k', 'j', 'l'},
+    }};
 
 }
 #endif SETTINGS_H

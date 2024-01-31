@@ -34,8 +34,8 @@ public:
     void eraseBoard();
 
 private:
-    int m_board[setting::height][setting::width]{};
-    int m_clearBoard[setting::height][setting::width]{};
+    int m_board[settings::height][settings::width]{};
+    int m_clearBoard[settings::height][settings::width]{};
 };
 
 

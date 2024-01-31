@@ -3,8 +3,8 @@
 Snake::Snake(const Point& pos, const Direction& dir)
         : m_length{1}, m_dir{dir}
 {
-    assert(pos.x < setting::width && pos.x > 0 && "Bad argument x in Snake()");
-    assert(pos.y < setting::height && pos.y > 0 && "Bad argument y in Snake()");
+    assert(pos.x < settings::width && pos.x > 0 && "Bad argument x in Snake()");
+    assert(pos.y < settings::height && pos.y > 0 && "Bad argument y in Snake()");
 
     m_snakePos.emplace_back(pos);
 }
