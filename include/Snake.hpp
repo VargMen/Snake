@@ -23,23 +23,18 @@ public:
 
     };
 
-    static std::string printDir(const Direction& dir)
-    {
-        switch(dir)
-        {
-            case Direction::up: return "up";
-            case Direction::down: return "down";
-            case Direction::left: return "left";
-            case Direction::right: return "right";
-            default: return "???";
-        }
-    }
+    Snake() = default;
 
     explicit Snake(const Point& pos, const Direction& dir);
+
+    Snake& operator=(const Snake& snake) = default;
+
+
 
     friend Direction operator-(const Direction& dir);
 
     void updateDir(const Direction& dir);
+
 
 
     Point newHeadPos();
@@ -47,12 +42,11 @@ public:
     void moveSnake();
 
 
+
     void levelUp();
 
-
-    bool isHitItself();
-
     bool isAte(const Point& food_pos) const { return m_snakePos.front() == food_pos; }
+
 
 
     int getScore() const { return m_score; }
@@ -68,7 +62,6 @@ private:
     int m_length{};
     Direction m_dir{};
     int m_score{};
-    int m_pauseTime{settings::firstPauseTime};
 };
 
 

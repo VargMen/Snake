@@ -29,6 +29,7 @@ Point Snake::newHeadPos()
     return result;
 }
 
+
 void Snake::updateDir(const Direction& dir)
 {
     if(dir != Direction::max_directions)
@@ -42,16 +43,6 @@ void Snake::moveSnake()
 {
     m_snakePos.pop_back();
     m_snakePos.insert(m_snakePos.begin(), newHeadPos()); //update the head and implicitly change the coordinates of the entire snake
-}
-
-bool Snake::isHitItself()
-{
-    for(int i{1}; i < m_length; ++i)
-        if(m_snakePos[0] == m_snakePos[i])
-        {
-            return true;
-        }
-    return false;
 }
 
 void Snake::levelUp()

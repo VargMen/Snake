@@ -24,9 +24,11 @@ public:
     void initByMap(std::string_view mapName);
 
 
+
     int getCellValue(const Point& cell) const { return m_board[cell.x][cell.y]; }
 
     void setCellValue(const Point& cell, const MapSymbols& symbol) { m_board[cell.x][cell.y] = symbol; }
+
 
 
     bool isPosWall(const Point& pos) const;

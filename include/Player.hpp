@@ -9,23 +9,37 @@
 class Player
 {
 public:
-    Player(const Point& pos, const Snake::Direction& dir)
-    : m_snake(pos, dir)
+    Player() = default;
+
+    Player(const Point& pos, const Snake::Direction& dir, std::string_view keys, const std::string& name)
+    :m_snake{pos, dir}, m_keys{keys}, m_name{name}
     {
     }
 
-    void setKeys(const std::array<char, settings::keyNums>& keys)
+
+    void setKeys(const std::string& keys)
     {
         m_keys = keys;
     }
 
-    std::array<char, settings::keyNums> getKeys() { return m_keys; }
+
+    std::string_view getKeys() const { return m_keys; }
+
+    std::vector<Point> getSnakePos() const { return m_snake.getPos(); }
+
+    Point getSnakeHead() const { return m_snake.getHead(); }
+
+    const std::string& getName() const { return m_name; }
+
+    int getSnakeScore() const { return m_snake.getScore(); }
 
     Snake& snake() { return m_snake; }
-private:
-    std::array<char, settings::keyNums> m_keys;
 
-    Snake m_snake;
+private:
+    std::string m_keys{};
+    std::string m_name{};
+
+    Snake m_snake{};
 };
 
 #endif //PLAYER_H

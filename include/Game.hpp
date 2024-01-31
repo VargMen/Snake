@@ -24,59 +24,78 @@ public:
 
 private:
 
-    Board m_board{settings::mapPath};
-
-    std::vector<Player> m_players;
-
-    std::vector<int> m_inputs{};
-
-    int m_pauseTime {settings::firstPauseTime};
-
-    Food m_food{Point{5, 5} };
-
-    WINDOW * m_winGame{};
-    WINDOW * m_winScore{};
-
-    void setPlayersKeys();
-
-    void setPlayers();
-
-    int whoLose();
-
-    bool handleOver(int whoLose);
-
     void spawnSnake();
 
     void spawnFood();
 
     void spawnOnBoard(const Point& point, char symbol);
 
-    void clearWindow();
 
-    void refreshWindow();
 
-    void printScore();
+    void setPlayers();
 
     void setNewDirections(std::vector<Snake::Direction>& directions);
 
-    void getInputs();
 
-
-    void restartGame();
-
-    void printMessageToPlayAgain();
 
     int getAnswer();
 
-    static bool isPosAnotherSnake(const Point& pos, const Snake& anotherSnake);
+    void getInputs();
 
-    void displayState();
+    std::string_view whoLose();
+
+    void handlePause(int ch) const;
+
+    std::vector<Snake::Direction> handleInput();
+
+
 
     void updateState();
 
     void updatePauseTime();
 
-    void handleInput(std::vector<Snake::Direction>& newDirs);
+
+
+    void printScore();
+
+    void printMessageToPlayAgain();
+
+    void printLoser(const std::string& loser);
+
+    void displayState();
+
+
+
+    void clearWindow();
+
+    void refreshWindow();
+
+
+
+    void pause() const;
+
+    void restartGame();
+
+
+
+    bool isPosAnotherSnake(const Player& testedSnake,
+                           const Player& anotherSnake) const ;
+
+
+
+    void stopGame() const;
+
+    void resumeGame() const;
+
+private:
+
+    WINDOW * m_winGame{};
+    WINDOW * m_winScore{};
+    std::array<Player, settings::playersAmount> m_players;
+    Board m_board{settings::mapPath};
+    Food m_food{Point{5, 5} };
+    std::vector<int> m_inputs{};
+    int m_pauseTime {settings::firstPauseTime};
 };
 
 
