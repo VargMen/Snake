@@ -28,10 +28,19 @@ namespace settings
 
     constexpr std::array<std::string_view, playersAmount> allKeys
     {
-        "wsad",
-        "ikjl",
+        "wsad", //Player 1
+        "ikjl", // Player 2
         "tgfh"
     };
+
+    constexpr std::array<std::string_view, playersAmount> playersNames
+    {
+        "Danya", //Player 1
+        "Vitya", // Player 2
+        "Bot"
+    };
+
+    constexpr int numOfMenuChoices {3};
 
 }
 #endif //SETTINGS_H

@@ -11,11 +11,17 @@ class Player
 public:
     Player() = default;
 
-    Player(const Point& pos, const Snake::Direction& dir, std::string_view keys, const std::string& name)
+    Player(const Point& pos, const Snake::Direction& dir, std::string_view keys, std::string_view name)
     :m_snake{pos, dir}, m_keys{keys}, m_name{name}
     {
     }
 
+    Player& operator=(const Player& player)
+    {
+        m_keys = player.m_keys;
+        m_name = player.m_name;
+        m_snake = player.m_snake;
+    }
 
     void setKeys(const std::string& keys)
     {

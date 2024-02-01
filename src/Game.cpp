@@ -4,9 +4,7 @@
 #include <algorithm>
 
 Game::Game()
-: m_players{ Player{Point{5,5}, Snake::Direction::down, settings::allKeys[0], "Danya"},
-             Player{Point{3,3}, Snake::Direction::down, settings::allKeys[1], "Vitya"},
-             Player{Point{7,7}, Snake::Direction::down, settings::allKeys[2], "Bot"}}
+: m_players{ setPlayers() }
 {
     initscr();
     noecho();
@@ -18,6 +16,20 @@ Game::Game()
     nodelay(stdscr, TRUE);
     scrollok(stdscr, TRUE);
 
+}
+
+std::array<Player, settings::playersAmount> Game::setPlayers()
+{
+    std::array<Player, settings::playersAmount> playersSettings{};
+    int pos{2};
+
+    for(size_t i{0}; i < playersSettings.size(); ++i)
+    {
+        playersSettings[i] = Player{ Point{pos, pos}, Snake::Direction::down, settings::allKeys[i], settings::playersNames[i] };
+        pos += 3;
+    }
+
+    return playersSettings;
 }
 
 void Game::startGame()
@@ -79,9 +91,7 @@ void Game::restartGame()
 {
     m_board = Board{settings::mapPath};
 
-    m_players= { Player{Point{5,5}, Snake::Direction::down, settings::allKeys[0], "Danya"},
-                 Player{Point{3,3}, Snake::Direction::down, settings::allKeys[1], "Vitya"},
-                 Player{Point{7,7}, Snake::Direction::down, settings::allKeys[2], "Bot"}};
+    m_players = setPlayers();
 
     m_food = Food{Point{5, 5}};
 }

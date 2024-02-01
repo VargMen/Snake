@@ -16,6 +16,9 @@
 class Game
 {
 public:
+
+    friend class Menu;
+
     Game();
 
     void startGame();
@@ -32,7 +35,7 @@ private:
 
 
 
-    void setPlayers();
+    std::array<Player, settings::playersAmount> setPlayers();
 
     void setNewDirections(std::vector<Snake::Direction>& directions);
 
