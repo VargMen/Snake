@@ -31,10 +31,11 @@ namespace graphics
 
         backgroundInGame,
 
+        black,
         max_colors
     };
 
-    constexpr short backgroundColorInGame { COLOR_BLACK };
+    constexpr short backgroundColorInGame { MyCOLOR_YELLOW };
     constexpr short backgroundColorInMenu {  MyCOLOR_YELLOW };
 
     inline void initColor()
@@ -54,12 +55,14 @@ namespace graphics
         init_pair(ObjColors::thirdSnake, COLOR_CYAN, backgroundColorInGame);
 
         init_pair(ObjColors::wall, COLOR_WHITE, backgroundColorInGame);
-        init_pair(ObjColors::space, backgroundColorInGame, backgroundColorInGame);
+        init_pair(ObjColors::space, MyCOLOR_YELLOW, MyCOLOR_YELLOW);
+
+        init_pair(ObjColors::black, COLOR_BLACK, COLOR_BLACK);
     }
 
     inline void setGameColor(WINDOW* gameWindow)
     {
-        wbkgd(gameWindow, COLOR_PAIR(wall));
+        wbkgd(gameWindow, COLOR_PAIR(bigWordSnakeInMenu));
     }
 
     inline void setMenuColor(WINDOW* menuWin)

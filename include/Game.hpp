@@ -13,6 +13,7 @@
 
 #include "Point.hpp"
 #include "settings.hpp"
+#include "graphics.hpp"
 
 class Game
 {
@@ -24,7 +25,12 @@ public:
 
     void startGame();
 
-    ~Game() { endwin(); }
+    ~Game()
+    {
+        wbkgd(m_winGame, graphics::ObjColors::black); //After the game is over, when we return to the menu,
+        refreshWindow();                              //part of the playing field remains displayed,
+        endwin();                                     //so we do this to make it invisible
+    }
 
 private:
 
@@ -79,6 +85,8 @@ private:
 
     void restartGame();
 
+
+    void makeGameBorder();
 
 
     bool isPosAnotherSnake(const Player& testedSnake,

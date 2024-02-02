@@ -3,25 +3,21 @@
 #include <thread>
 #include <algorithm>
 
-#include "graphics.hpp"
 
 Game::Game()
 : m_players{ setPlayers() }
 {
-    cbreak();
-
-    m_winGame = newwin(settings::height+1, settings::width+1, settings::bias_x, settings::bias_y);
-    m_winScore = newwin(settings::height+1, 30, 1 + settings::bias_x, settings::width+2 + settings::bias_y); //30 is size for window with score and etc
-
-    box(m_winScore, 0, 0);
-    box(m_winGame, 0, 0);
+    m_winGame = newwin(settings::height, settings::width, settings::bias_x, settings::bias_y);
+    m_winScore = newwin(settings::height, 30, 1 + settings::bias_x, settings::width+2 + settings::bias_y); //30 is size for window with score and etc
 
     graphics::setGameColor(m_winGame);
-    graphics::setGameColor(m_winScore);
-
+    //graphics::setGameColor(m_winScore);
 
     nodelay(stdscr, TRUE);
     scrollok(stdscr, TRUE);
+
+    refresh();
+    refreshWindow();
 }
 
 std::array<Player, settings::playersAmount> Game::setPlayers()
@@ -191,9 +187,26 @@ void Game::displayState()
     }
     printScore();
 
+    // Define custom characters
+    chtype vline = 186;
+    chtype hline = 205;
+    chtype ulcorner = 201;
+    chtype urcorner = 187;
+    chtype llcorner = 200;
+    chtype lrcorner = 188;
+
+    // Set the custom characters for the border
+    wborder(m_winGame, vline, vline, hline, hline, ulcorner, urcorner, llcorner, lrcorner);
+
+    makeGameBorder();
+
     refreshWindow();
 }
 
+void Game::makeGameBorder()
+{
+    wborder(m_winGame, '|', '|', '-', '-', '+', '+', '+', '+');
+}
 
 void Game::updatePauseTime()
 {
@@ -267,8 +280,8 @@ void Game::spawnOnBoard(const Point& point, char symbol)
     switch(symbol)
     {
         case Board::MapSymbols::wall:
-            //graphics::color_mvwaddch(m_winGame, point.x, point.y,
-                                  //   graphics::ObjColors::wall, graphics::wallSymbol);
+            graphics::color_mvwaddch(m_winGame, point.x, point.y,
+                                     graphics::ObjColors::wall, graphics::wallSymbol);
             break;
         case Board::MapSymbols::space:
             graphics::color_mvwaddch(m_winGame, point.x, point.y,
@@ -303,7 +316,7 @@ void Game::printScore()
     for(int i{0}; i < settings::playersAmount; i++)
     {
         wmove(m_winScore, i + bias , 0);
-        wprintw(m_winScore, "%s : %d", m_players[i].getName().c_str(), m_players[i].getSnakeScore());
+        wprintw(m_winScore, "%s: %d", m_players[i].getName().c_str(), m_players[i].getSnakeScore());
         bias += 2;
     }
 }

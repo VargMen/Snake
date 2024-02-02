@@ -7,6 +7,7 @@ Menu::Menu()
     initscr();
     noecho();
     curs_set(0);
+    cbreak();
 
     if (has_colors() == FALSE)
     {
@@ -14,7 +15,7 @@ Menu::Menu()
         assert(0 && "Your terminal does not support colors");
     }
 
-    //start_color();
+    start_color();
 
     int yMax, xMax;
     getmaxyx(stdscr, yMax, xMax);
@@ -27,7 +28,7 @@ Menu::Menu()
     keypad(m_menuWin, TRUE);
     keypad(stdscr, TRUE);
 
-    graphics:: initColor();
+    graphics::initColor();
 
     graphics::setMenuColor(m_menuWin);
 
@@ -64,6 +65,7 @@ void Menu::startMenu()
             clear();
             wclear(m_menuWin);
             makeGame();
+
             setDefaultMenu();
         }
         else if(m_currentChoice == Choices::Exit)
