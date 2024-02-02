@@ -14,7 +14,7 @@ Menu::Menu()
         assert(0 && "Your terminal does not support colors");
     }
 
-    start_color();
+    //start_color();
 
     int yMax, xMax;
     getmaxyx(stdscr, yMax, xMax);
@@ -34,8 +34,6 @@ Menu::Menu()
     mvwprintw(m_menuWin, 1, 40, "%s", snake);
 
     box(m_menuWin, 0, 0);
-
-    wrefresh(m_menuWin);
 }
 
 Menu::~Menu()

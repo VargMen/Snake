@@ -14,6 +14,7 @@ Game::Game()
     m_winScore = newwin(settings::height+1, 30, 1 + settings::bias_x, settings::width+2 + settings::bias_y); //30 is size for window with score and etc
 
     box(m_winScore, 0, 0);
+    box(m_winGame, 0, 0);
 
     graphics::setGameColor(m_winGame);
     graphics::setGameColor(m_winScore);
@@ -266,8 +267,8 @@ void Game::spawnOnBoard(const Point& point, char symbol)
     switch(symbol)
     {
         case Board::MapSymbols::wall:
-            graphics::color_mvwaddch(m_winGame, point.x, point.y,
-                                     graphics::ObjColors::wall, graphics::wallSymbol);
+            //graphics::color_mvwaddch(m_winGame, point.x, point.y,
+                                  //   graphics::ObjColors::wall, graphics::wallSymbol);
             break;
         case Board::MapSymbols::space:
             graphics::color_mvwaddch(m_winGame, point.x, point.y,
