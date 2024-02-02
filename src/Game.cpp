@@ -332,7 +332,6 @@ std::string_view Game::whoLose()
         }
     }
 
-    int i{0};
 
     for(const auto& testedPlayer: m_players)
     {
@@ -340,8 +339,6 @@ std::string_view Game::whoLose()
         {
             if(&testedPlayer == &anotherPlayer)
                 continue;
-
-            ++i;
 
             if(isPosAnotherSnake(testedPlayer, anotherPlayer)) //it means testedPlayer is crashed into anotherPlayer
             {

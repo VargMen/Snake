@@ -31,9 +31,9 @@ Menu::Menu()
 
     graphics::setMenuColor(m_menuWin);
 
-    box(m_menuWin, 0, 0);
+    mvwprintw(m_menuWin, 1, 40, "%s", snake);
 
-    graphics::color_mvwprintw(m_menuWin, 1, 20,COLOR_PAIR(graphics::bigWordSnakeInMenu), "%s", snake);
+    box(m_menuWin, 0, 0);
 
     wrefresh(m_menuWin);
 }
@@ -63,6 +63,7 @@ void Menu::startMenu()
         handleInput();
         if(m_currentChoice == Choices::Play)
         {
+            clear();
             wclear(m_menuWin);
             makeGame();
             setDefaultMenu();
