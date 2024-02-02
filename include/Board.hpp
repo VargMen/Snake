@@ -14,8 +14,11 @@ public:
     {
         wall = -1,
         space,
-        snake,
+        firstSnake,
+        secondSnake,
+        thirdSnake,
         food,
+
         max_mapSymbols
     };
 

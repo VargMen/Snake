@@ -6,7 +6,6 @@
 #include "Game.hpp"
 #include "settings.hpp"
 
-
 constexpr char* snake {   "\n"
                       "                   _____                   _           \n"
                       "                  / ____|                 | |          \n"
@@ -16,11 +15,19 @@ constexpr char* snake {   "\n"
                       "                 |_____/  |_| |_|  \\__,_| |_|\\_\\  \\___|\n"
                       "                                       \n"
                       "                                       "
-};
+                      };
 
 
 class Menu {
 public:
+    enum Choices
+    {
+        Play,
+        Settings,
+        Exit,
+        max_choices
+    };
+
     Menu();
 
     ~Menu();
@@ -28,10 +35,10 @@ public:
     void startMenu();
 
 private:
-
     void makeGame();
 
     void setDefaultMenu();
+    void setColors() const;
 
     void displayMenu() const;
     void handleInput();

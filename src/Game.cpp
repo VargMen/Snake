@@ -3,19 +3,24 @@
 #include <thread>
 #include <algorithm>
 
+#include "graphics.hpp"
+
 Game::Game()
 : m_players{ setPlayers() }
 {
-    initscr();
-    noecho();
     cbreak();
-    m_winGame = newwin(settings::height+1, settings::width+1, 0, 0);
-    m_winScore = newwin(settings::height+1, 30, 1, settings::width+2); //30 is size for window with score and etc
 
-    curs_set(0);
+    m_winGame = newwin(settings::height+1, settings::width+1, settings::bias_x, settings::bias_y);
+    m_winScore = newwin(settings::height+1, 30, 1 + settings::bias_x, settings::width+2 + settings::bias_y); //30 is size for window with score and etc
+
+    box(m_winScore, 0, 0);
+
+    graphics::setGameColor(m_winGame);
+    graphics::setGameColor(m_winScore);
+
+
     nodelay(stdscr, TRUE);
     scrollok(stdscr, TRUE);
-
 }
 
 std::array<Player, settings::playersAmount> Game::setPlayers()
@@ -25,7 +30,8 @@ std::array<Player, settings::playersAmount> Game::setPlayers()
 
     for(size_t i{0}; i < playersSettings.size(); ++i)
     {
-        playersSettings[i] = Player{ Point{pos, pos}, Snake::Direction::down, settings::allKeys[i], settings::playersNames[i] };
+        playersSettings[i] = Player{ Point{pos, pos}, Snake::Direction::down, settings::allKeys[i],
+                                     settings::playersNames[i]};
         pos += 3;
     }
 
@@ -98,12 +104,17 @@ void Game::restartGame()
 
 void Game::spawnSnake()
 {
+    Board::MapSymbols symbols[3] { Board::firstSnake, Board::secondSnake, Board::thirdSnake};
+
+    int i{0};
+
     for(auto& player: m_players)
     {
         for(const auto& pos: player.snake().getPos())
         {
-            m_board.setCellValue(pos, Board::snake);
+            m_board.setCellValue(pos, symbols[i]);
         }
+        ++i;
     }
 }
 
@@ -118,7 +129,7 @@ void Game::resumeGame() const { timeout(0); }
 
 void Game::getInputs()
 {
-    int ch{};
+    int ch;
     m_inputs.clear();
 
     while((ch = getch()) != ERR)
@@ -252,22 +263,34 @@ void Game::updateState()
 
 void Game::spawnOnBoard(const Point& point, char symbol)
 {
-    switch( symbol )
+    switch(symbol)
     {
-        case Board::MapSymbols::space:
-            mvwaddch(m_winGame, point.x, point.y, ' ');
-            break;
         case Board::MapSymbols::wall:
-            mvwaddch(m_winGame, point.x, point.y, '#');
+            graphics::color_mvwaddch(m_winGame, point.x, point.y,
+                                     graphics::ObjColors::wall, graphics::wallSymbol);
             break;
-        case Board::MapSymbols::snake:
-            mvwaddch(m_winGame, point.x, point.y, 'o');
+        case Board::MapSymbols::space:
+            graphics::color_mvwaddch(m_winGame, point.x, point.y,
+                                     graphics::ObjColors::space, graphics::spaceSymbol);
+            break;
+        case Board::MapSymbols::firstSnake:
+            graphics::color_mvwaddch(m_winGame, point.x, point.y,
+                                     graphics::ObjColors::firstSnake, graphics::playerSymbols[0]);
+            break;
+        case Board::MapSymbols::secondSnake:
+            graphics::color_mvwaddch(m_winGame, point.x, point.y,
+                                     graphics::ObjColors::secondSnake, graphics::playerSymbols[1]);
+            break;
+        case Board::MapSymbols::thirdSnake:
+            graphics::color_mvwaddch(m_winGame, point.x, point.y,
+                                     graphics::ObjColors::thirdSnake, graphics::playerSymbols[2]);
             break;
         case Board::MapSymbols::food:
-            mvwaddch(m_winGame, point.x, point.y, '*');
+            graphics::color_mvwaddch(m_winGame, point.x, point.y,
+                                     graphics::ObjColors::food, graphics::foodSymbol);
             break;
         default:
-            assert(0 && "Unknown symbol in board\n");
+            assert(0 && "Bad symbol in spawnOnBoard()");
     }
 }
 

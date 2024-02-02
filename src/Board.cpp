@@ -1,6 +1,7 @@
 #include <fstream>
 
-#include "../include/Board.hpp"
+#include "Board.hpp"
+#include "graphics.hpp"
 
 void Board::eraseBoard()
 {
@@ -18,6 +19,7 @@ bool Board::isPosWall(const Point& pos) const
 
 
 void Board::initByMap(std::string_view mapName) {
+
     std::ifstream file(mapName.data());
     if (!file.is_open())
     {

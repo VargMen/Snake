@@ -1,11 +1,20 @@
 #include "Menu.hpp"
 
+#include "graphics.hpp"
 
 Menu::Menu()
 {
     initscr();
     noecho();
     curs_set(0);
+
+    if (has_colors() == FALSE)
+    {
+        endwin();
+        assert(0 && "Your terminal does not support colors");
+    }
+
+    start_color();
 
     int yMax, xMax;
     getmaxyx(stdscr, yMax, xMax);
@@ -18,9 +27,15 @@ Menu::Menu()
     keypad(m_menuWin, TRUE);
     keypad(stdscr, TRUE);
 
-    mvwprintw(m_menuWin, 1, 40, "%s", snake);
+    graphics:: initColor();
+
+    graphics::setMenuColor(m_menuWin);
 
     box(m_menuWin, 0, 0);
+
+    graphics::color_mvwprintw(m_menuWin, 1, 20,COLOR_PAIR(graphics::bigWordSnakeInMenu), "%s", snake);
+
+    wrefresh(m_menuWin);
 }
 
 Menu::~Menu()
@@ -46,13 +61,13 @@ void Menu::startMenu()
     {
         displayMenu();
         handleInput();
-        if(m_currentChoice == 0)
+        if(m_currentChoice == Choices::Play)
         {
             wclear(m_menuWin);
             makeGame();
             setDefaultMenu();
         }
-        else if(m_currentChoice == 2)
+        else if(m_currentChoice == Choices::Exit)
         {
             isEnd = true;
         }
@@ -75,6 +90,7 @@ void Menu::displayMenu() const
     {
         if (i == m_highlight)
             wattron(m_menuWin, A_REVERSE);
+
         mvwprintw(m_menuWin, i + m_height / 2 + 2 + 1, m_width / 2 - 2, "%s", m_choices[i]);
         wattroff(m_menuWin, A_REVERSE);
     }

@@ -9,6 +9,9 @@ namespace settings
     constexpr int width{40};
     constexpr int height{21};
 
+    constexpr int bias_x{height/2};
+
+    constexpr int bias_y{width/2 + 37};
 
     constexpr std::string_view mapPath{ "../Maps/21x40.txt" };
 
@@ -23,8 +26,6 @@ namespace settings
 
 
     constexpr int playersAmount {3};
-
-
 
     constexpr std::array<std::string_view, playersAmount> allKeys
     {
