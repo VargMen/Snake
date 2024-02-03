@@ -2,21 +2,46 @@
 #define SETTINGS_H
 
 #include <string_view>
+#include <array>
 
-namespace setting
+namespace settings
 {
-    constexpr int width{31};
-    constexpr int height{12};
+    constexpr int width{40};
+    constexpr int height{21};
 
-    constexpr std::string_view mapPath{ "../Maps/12x31.txt" };
+    constexpr int bias_x{height/2};
 
-    constexpr int firstPauseTime{300}; //this defines the time for the snake to change position,
+    constexpr int bias_y{width/2 + 37};
+
+    constexpr std::string_view mapPath{ "../Maps/21x40.txt" };
+
+
+
+    constexpr int firstPauseTime{250}; //this defines the time for the snake to change position,
                                        //you should specify it in milliseconds.
-
     constexpr int smallestPauseTime{100};
 
     constexpr int pauseTimeReduceStep{20};
 
 
+
+    constexpr int playersAmount {3};
+
+    constexpr std::array<std::string_view, playersAmount> allKeys
+    {
+        "wsad", //Player 1
+        "ikjl", // Player 2
+        "tgfh"
+    };
+
+    constexpr std::array<std::string_view, playersAmount> playersNames
+    {
+        "Danya", //Player 1
+        "Vitya", // Player 2
+        "Bot"
+    };
+
+    constexpr int numOfMenuChoices {3};
+
 }
-#endif SETTINGS_H
+#endif //SETTINGS_H

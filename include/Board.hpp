@@ -14,8 +14,11 @@ public:
     {
         wall = -1,
         space,
-        snake,
+        firstSnake,
+        secondSnake,
+        thirdSnake,
         food,
+
         max_mapSymbols
     };
 
@@ -24,19 +27,20 @@ public:
     void initByMap(std::string_view mapName);
 
 
+
     int getCellValue(const Point& cell) const { return m_board[cell.x][cell.y]; }
 
     void setCellValue(const Point& cell, const MapSymbols& symbol) { m_board[cell.x][cell.y] = symbol; }
 
 
-    bool isPosWall(const Point& pos) const;
 
+    bool isPosWall(const Point& pos) const;
 
     void eraseBoard();
 
 private:
-    int m_board[setting::height][setting::width]{};
-    int m_clearBoard[setting::height][setting::width]{};
+    int m_board[settings::height][settings::width]{};
+    int m_clearBoard[settings::height][settings::width]{};
 };
 
 

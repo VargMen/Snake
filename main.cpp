@@ -1,7 +1,8 @@
-#include "include/Game.hpp"
+#include "Menu.hpp"
 
 int main() {
-    Game g;
-    g.startGame();
+    Menu m;
+    m.startMenu();
+
     return 0;
 }

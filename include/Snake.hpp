@@ -3,6 +3,7 @@
 
 #include <cassert>
 #include <vector>
+#include <iostream>
 
 #include "Point.hpp"
 #include "settings.hpp"
@@ -10,6 +11,8 @@
 class Snake
 {
 public:
+    friend class Player;
+
     enum class Direction
     {
         up,
@@ -17,13 +20,21 @@ public:
         left,
         right,
         max_directions
+
     };
 
+    Snake() = default;
+
     explicit Snake(const Point& pos, const Direction& dir);
+
+    Snake& operator=(const Snake& snake) = default;
+
+
 
     friend Direction operator-(const Direction& dir);
 
     void updateDir(const Direction& dir);
+
 
 
     Point newHeadPos();
@@ -31,12 +42,11 @@ public:
     void moveSnake();
 
 
+
     void levelUp();
 
-
-    bool isHitItself();
-
     bool isAte(const Point& food_pos) const { return m_snakePos.front() == food_pos; }
+
 
 
     int getScore() const { return m_score; }
@@ -45,14 +55,13 @@ public:
 
     Direction getDir() const { return m_dir; }
 
-    int getPauseTime() const { return m_pauseTime; }
+    Point getHead() const { return m_snakePos[0]; }
 
 private:
     std::vector<Point> m_snakePos{};
     int m_length{};
     Direction m_dir{};
     int m_score{};
-    int m_pauseTime{setting::firstPauseTime};
 };
 
 
