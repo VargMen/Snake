@@ -35,8 +35,8 @@ namespace graphics
         max_colors
     };
 
-    constexpr short backgroundColorInGame { MyCOLOR_YELLOW };
-    constexpr short backgroundColorInMenu {  MyCOLOR_YELLOW };
+    constexpr short backgroundColorInGame { MyCOLOR_BLUE };
+    constexpr short backgroundColorInMenu {  MyCOLOR_BLUE };
 
     inline void initColor()
     {
@@ -50,12 +50,12 @@ namespace graphics
 
         init_pair(ObjColors::food, COLOR_RED, backgroundColorInGame);
 
-        init_pair(ObjColors::firstSnake, COLOR_YELLOW, backgroundColorInGame);
+        init_pair(ObjColors::firstSnake, COLOR_MAGENTA, backgroundColorInGame);
         init_pair(ObjColors::secondSnake, COLOR_GREEN, backgroundColorInGame);
         init_pair(ObjColors::thirdSnake, COLOR_CYAN, backgroundColorInGame);
 
         init_pair(ObjColors::wall, COLOR_WHITE, backgroundColorInGame);
-        init_pair(ObjColors::space, MyCOLOR_YELLOW, MyCOLOR_YELLOW);
+        init_pair(ObjColors::space, MyCOLOR_BLUE, MyCOLOR_BLUE);
 
         init_pair(ObjColors::black, COLOR_BLACK, COLOR_BLACK);
     }
@@ -92,7 +92,7 @@ namespace graphics
     constexpr char wallSymbol { '#' };
     constexpr char spaceSymbol { ' ' };
     constexpr char foodSymbol { '*'};
-    constexpr char* playerSymbols { "o0D"}; //i should make space at the beginning because of my implementation
+    constexpr char* playerSymbols { "X0D"}; //i should make space at the beginning because of my implementation
                                           //and last space represent symbol for space
 }
 #endif //GRAPHICS_HPP

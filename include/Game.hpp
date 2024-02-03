@@ -10,6 +10,7 @@
 #include "Food.hpp"
 #include "Player.hpp"
 #include "Menu.hpp"
+#include "Scores.hpp"
 
 #include "Point.hpp"
 #include "settings.hpp"
@@ -92,6 +93,10 @@ private:
     bool isPosAnotherSnake(const Player& testedSnake,
                            const Player& anotherSnake) const ;
 
+
+    std::vector<Score> getPlayersScores();
+
+    void saveScores(const std::vector<Score>& newScores, const char* scoresFilePath);
 
 
     void stopGame() const;

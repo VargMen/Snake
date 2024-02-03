@@ -17,6 +17,8 @@ add_executable(Snake_game main.cpp
         src/Menu.cpp
         include/Menu.hpp
         graphics.hpp
+        include/Scores.hpp
+        src/Scores.cpp
 
 
 )

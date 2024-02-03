@@ -4,7 +4,9 @@
 #include <ncurses.h>
 
 #include "Game.hpp"
+
 #include "settings.hpp"
+
 
 constexpr char* snake {   "\n"
                       "                   _____                   _           \n"
@@ -35,26 +37,23 @@ public:
     void startMenu();
 
 private:
+
     void makeGame();
 
     void setDefaultMenu();
-    void setColors() const;
 
     void displayMenu() const;
+
     void handleInput();
 
+private:
     int m_width{};
     int m_height{};
-
     const int m_numOfChoices{ settings::numOfMenuChoices };
-
     WINDOW *m_menuWin{};
-
     const std::array<const char*, settings::numOfMenuChoices> m_choices
                                         { "Play", "Settings", "Exit"};
-
     int m_highlight{};
-
     int m_currentChoice{-1};
 };
 

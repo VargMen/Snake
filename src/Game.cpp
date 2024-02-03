@@ -8,7 +8,7 @@ Game::Game()
 : m_players{ setPlayers() }
 {
     m_winGame = newwin(settings::height, settings::width, settings::bias_x, settings::bias_y);
-    m_winScore = newwin(settings::height, 30, 1 + settings::bias_x, settings::width+2 + settings::bias_y); //30 is size for window with score and etc
+    m_winScore = newwin(settings::height, 30, 1 + settings::bias_x, settings::width + 2 + settings::bias_y); //30 is size for window with score and etc
 
     graphics::setGameColor(m_winGame);
     //graphics::setGameColor(m_winScore);
@@ -52,6 +52,8 @@ void Game::startGame()
             pause();
 
         } while( (loser = whoLose()) == "" ); //while we not get the name of the loser
+
+        saveScores(getPlayersScores(), "../playersScores.txt");
 
         printLoser(loser);
 
@@ -361,5 +363,24 @@ std::string_view Game::whoLose()
         }
     }
     return "";
+}
+
+std::vector<Score> Game::getPlayersScores()
+{
+    std::vector<Score> playersScores{};
+    playersScores.reserve(settings::playersAmount);
+
+    for(const auto& player: m_players)
+    {
+        playersScores.emplace_back(player.getName(), player.getSnakeScore());
+    }
+
+    return playersScores;
+}
+
+void Game::saveScores(const std::vector<Score>& newScores, const char* scoresFilePath)
+{
+    Scores scores{scoresFilePath};
+    scores.updateScores(newScores);
 }
 
