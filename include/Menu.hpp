@@ -2,57 +2,39 @@
 #define MENU_H
 
 #include <ncurses.h>
-
-#include "Game.hpp"
+#include <vector>
 
 #include "settings.hpp"
 
 
-constexpr char* snake {   "\n"
-                      "                   _____                   _           \n"
-                      "                  / ____|                 | |          \n"
-                      "                 | (___    _ __     __ _  | | __   ___ \n"
-                      "                  \\___ \\  | '_ \\   / _` | | |/ /  / _ \\\n"
-                      "                  ____) | | | | | | (_| | |   <  |  __/\n"
-                      "                 |_____/  |_| |_|  \\__,_| |_|\\_\\  \\___|\n"
-                      "                                       \n"
-                      "                                       "
-                      };
-
-
 class Menu {
 public:
-    enum Choices
-    {
-        Play,
-        Settings,
-        Exit,
-        max_choices
-    };
 
-    Menu();
+    explicit Menu(const std::vector<const char*>& choices,
+          int startY = 0, int startX = 0,
+          int width = 0, int height = 0);
 
-    ~Menu();
+    virtual void  startMenu() = 0;
 
-    void startMenu();
+protected:
 
-private:
+    virtual void setDefaultMenu() = 0;
 
-    void makeGame();
+    virtual void displayMenu() const = 0;
 
-    void setDefaultMenu();
+    virtual void handleInput();
 
-    void displayMenu() const;
+    void clearWindow();
 
-    void handleInput();
+    void updateWidthHeight();
 
-private:
+protected:
+    bool isResizable{};
     int m_width{};
     int m_height{};
-    const int m_numOfChoices{ settings::numOfMenuChoices };
-    WINDOW *m_menuWin{};
-    const std::array<const char*, settings::numOfMenuChoices> m_choices
-                                        { "Play", "Settings", "Exit"};
+    int m_numOfChoices{};
+    WINDOW *m_win{};
+    std::vector<const char*> m_choices{};
     int m_highlight{};
     int m_currentChoice{-1};
 };

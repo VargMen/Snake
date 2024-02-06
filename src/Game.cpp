@@ -122,9 +122,9 @@ void Game::spawnFood()
     m_board.setCellValue(m_food.getPos(), Board::food);
 }
 
-void Game::stopGame() const {  timeout(-1); }
+void Game::stopGame() {  timeout(-1); }
 
-void Game::resumeGame() const { timeout(0); }
+void Game::resumeGame() { timeout(0); }
 
 void Game::getInputs()
 {
@@ -138,7 +138,7 @@ void Game::getInputs()
     }
 }
 
-void Game::handlePause(int ch) const
+void Game::handlePause(int ch)
 {
     if(ch == 'p')
     {
@@ -324,7 +324,7 @@ void Game::printScore()
 }
 
 
-bool Game::isPosAnotherSnake(const Player& testedSnake, const Player& anotherSnake) const
+bool Game::isPosAnotherSnake(const Player& testedSnake, const Player& anotherSnake)
 {
     Point headTestedSnake { testedSnake.getSnakeHead() };
 

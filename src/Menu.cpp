@@ -2,105 +2,39 @@
 
 #include "graphics.hpp"
 
-Menu::Menu()
+Menu::Menu(const std::vector<const char*>& choices, int startY, int startX, int width, int height)
+    :m_choices{choices}, m_width{width}, m_height{height}
 {
-    initscr();
-    noecho();
-    curs_set(0);
-    cbreak();
-
-    if (has_colors() == FALSE)
+    if(width == 0 && height == 0)
     {
-        endwin();
-        assert(0 && "Your terminal does not support colors");
+        isResizable = true;
+        getmaxyx(stdscr, m_height, m_width);
+        m_win = newwin(m_height, m_width, startY, startX);
+        box(m_win, 0, 0);
+    }
+    else
+    {
+        isResizable = false;
+        m_win = newwin(m_height, m_width, startY, startX);
+        box(m_win, 0, 0);
     }
 
-    start_color();
+    keypad(m_win, TRUE);
+    //graphics::initColor();
 
-    int yMax, xMax;
-    getmaxyx(stdscr, yMax, xMax);
+    //graphics::setMenuColor(m_win);
 
-    m_width = xMax / 2;
-    m_height = yMax / 2;
-
-    m_menuWin = newwin(m_height, m_width, m_height / 2, m_width / 2);
-
-    keypad(m_menuWin, TRUE);
-    keypad(stdscr, TRUE);
-
-    graphics::initColor();
-
-    graphics::setMenuColor(m_menuWin);
-
-    mvwprintw(m_menuWin, 1, 40, "%s", snake);
-
-    box(m_menuWin, 0, 0);
+    m_numOfChoices = static_cast<int>(m_choices.size());
 }
 
-Menu::~Menu()
-{
-    endwin();
-}
 
-void Menu::makeGame()
-{
-    Game g;
-    g.startGame();
-
-    wclear(g.m_winGame);
-    wclear(g.m_winScore);
-
-    g.refreshWindow();
-}
-
-void Menu::startMenu()
-{
-    bool isEnd{false};
-    while(!isEnd)
-    {
-        displayMenu();
-        handleInput();
-        if(m_currentChoice == Choices::Play)
-        {
-            clear();
-            wclear(m_menuWin);
-            makeGame();
-
-            setDefaultMenu();
-        }
-        else if(m_currentChoice == Choices::Exit)
-        {
-            isEnd = true;
-        }
-    }
-}
-
-void Menu::setDefaultMenu()
-{
-    m_highlight = 0;
-    m_currentChoice = -1;
-
-    mvwprintw(m_menuWin, 1, 40, "%s", snake);
-
-    box(m_menuWin, 0, 0);
-}
-
-void Menu::displayMenu() const
-{
-    for (int i{0}; i < m_numOfChoices; ++i)
-    {
-        if (i == m_highlight)
-            wattron(m_menuWin, A_REVERSE);
-
-        mvwprintw(m_menuWin, i + m_height / 2 + 2 + 1, m_width / 2 - 2, "%s", m_choices[i]);
-        wattroff(m_menuWin, A_REVERSE);
-    }
-}
 void Menu::handleInput()
 {
-    int choice { wgetch(m_menuWin) };
+    int choice { wgetch(m_win) };
     switch (choice)
     {
+        case ERR: return;
+
         case 'w':
         case KEY_UP:
             if (m_highlight != 0) //We do not allow moving the
@@ -120,4 +54,17 @@ void Menu::handleInput()
     }
 }
 
+void Menu::clearWindow()
+{
+    clear();
+    wclear(m_win);
+}
 
+void Menu::updateWidthHeight()
+{
+    getmaxyx(stdscr, m_height, m_width); //update sizes
+    wresize(m_win, m_height, m_width); //make new window
+    wclear(m_win);
+    wrefresh(m_win);
+    box(m_win, 0, 0);
+}

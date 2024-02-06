@@ -20,7 +20,7 @@ class Game
 {
 public:
 
-    friend class Menu;
+    friend class MainMenu;
 
     Game();
 
@@ -28,6 +28,9 @@ public:
 
     ~Game()
     {
+        wclear(m_winGame);
+        wclear(m_winScore);
+
         wbkgd(m_winGame, graphics::ObjColors::black); //After the game is over, when we return to the menu,
         refreshWindow();                              //part of the playing field remains displayed,
         endwin();                                     //so we do this to make it invisible
@@ -43,7 +46,7 @@ private:
 
 
 
-    std::array<Player, settings::playersAmount> setPlayers();
+    static std::array<Player, settings::playersAmount> setPlayers();
 
     void setNewDirections(std::vector<Snake::Direction>& directions);
 
@@ -54,7 +57,7 @@ private:
 
     std::string_view whoLose();
 
-    void handlePause(int ch) const;
+    static void handlePause(int ch) ;
 
     std::vector<Snake::Direction> handleInput();
 
@@ -90,18 +93,18 @@ private:
     void makeGameBorder();
 
 
-    bool isPosAnotherSnake(const Player& testedSnake,
-                           const Player& anotherSnake) const ;
+    static bool isPosAnotherSnake(const Player& testedSnake,
+                           const Player& anotherSnake) ;
 
 
     std::vector<Score> getPlayersScores();
 
-    void saveScores(const std::vector<Score>& newScores, const char* scoresFilePath);
+    static void saveScores(const std::vector<Score>& newScores, const char* scoresFilePath);
 
 
-    void stopGame() const;
+    static void stopGame() ;
 
-    void resumeGame() const;
+    static void resumeGame() ;
 
 private:
 

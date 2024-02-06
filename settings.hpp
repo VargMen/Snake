@@ -15,8 +15,6 @@ namespace settings
 
     constexpr std::string_view mapPath{ "../Maps/21x40.txt" };
 
-
-
     constexpr int firstPauseTime{250}; //this defines the time for the snake to change position,
                                        //you should specify it in milliseconds.
     constexpr int smallestPauseTime{100};
