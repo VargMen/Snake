@@ -25,9 +25,11 @@ void endNcurses()
 }
 
 int main() {
+    using namespace std::string_literals;
+
     initNcurses();
 
-    MainMenu m{ std::vector{"Play", "SettingsMenu", "Exit"} };
+    MainMenu m{ {"Play"s, "Settings"s, "Exit"s} };
 
     m.startMenu();
 

@@ -34,15 +34,17 @@ public:
         max_choices
     };
 
-    explicit MainMenu(const std::vector<const char *>& choices);
+    explicit MainMenu(const std::vector<std::string>& choices);
 
     void startMenu() override;
 
 private:
 
+    void handleEvent(const Event& event) override;
+
     static void makeGame();
 
-    void setDefaultMenu() override;
+    static void makeSettings();
 
     void displayMenu() const override;
 };

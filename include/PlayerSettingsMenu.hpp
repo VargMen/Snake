@@ -16,17 +16,13 @@ public:
         max_choices
     };
 
-    explicit PlayerSettingsMenu(const std::vector<const char *>& choices);
+    explicit PlayerSettingsMenu(const std::vector<std::string>& choices);
 
     void startMenu() override;
 
 private:
 
-    void setDefaultMenu() override;
-
     void displayMenu() const override;
-
-    void handleInput() override;
 
     void changeValue(int& value, int minValue, int maxValue);
 

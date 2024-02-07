@@ -1,46 +1,59 @@
 #include "MainMenu.hpp"
 
-MainMenu::MainMenu(const std::vector<const char *>& choices)
+using namespace std::string_literals;
+
+
+MainMenu::MainMenu(const std::vector<std::string>& choices)
                     :Menu(choices)
 {
     displayMenu();
 }
 
-void MainMenu::startMenu()
+void MainMenu::handleEvent(const Event& event)
 {
-    bool isEnd{false};
-    while(!isEnd)
+    switch(event)
     {
-        handleInput();
-        updateWidthHeight();
-        displayMenu();
-        if(m_currentChoice == Choices::PLAY)
-        {
-            makeGame();
+        case ENTER_PRESSED:
+            m_currentChoice = m_highlight;
+            switch(m_currentChoice)
+            {
+                case Choices::PLAY:
+                    makeGame();
+                    setDefaultMenu();
+                    return;
 
-            setDefaultMenu();
-        }
-        else if(m_currentChoice == Choices::SETTINGS)
-        {
-            clearWindow();
+                case Choices::SETTINGS:
+                    makeSettings();
+                    setDefaultMenu();
+                    return;
 
-            SettingsMenu settings{std::vector{"Players amount", "Level", "Difficulty"} };
-            settings.startMenu();
-            setDefaultMenu();
-            settings.clearWindow();
-            displayMenu();
-        }
-        else if(m_currentChoice == Choices::EXIT)
-        {
-            isEnd = true;
-        }
+                case Choices::EXIT:
+                    abort();
+                default: ;
+            }
+           break;
+        case ESC_PRESSED:
+
+        default: ;
     }
 }
 
-void MainMenu::setDefaultMenu()
+void MainMenu::startMenu()
 {
-    m_highlight = 0;
-    m_currentChoice = -1;
+    while(1)
+    {
+        updateWidthHeight();
+        displayMenu();
+        Event event { handleInput() };
+        handleEvent(event);
+    }
+}
+
+void MainMenu::makeSettings()
+{
+    SettingsMenu settings{ {"Players amount", "Level", "Difficulty", "Players settings"} };
+    settings.startMenu();
+    settings.clearWindow();
 }
 
 void MainMenu::makeGame()
@@ -64,7 +77,7 @@ void MainMenu::displayMenu() const
         if (i == m_highlight)
             wattron(m_win, A_REVERSE);
 
-        mvwprintw(m_win, m_height/2 + i, 2, "%s", m_choices[i]);
+        mvwprintw(m_win, m_height/2 + i, 2, "%s", m_choices[i].c_str());
         wattroff(m_win, A_REVERSE);
     }
 }

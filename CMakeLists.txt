@@ -23,8 +23,8 @@ add_executable(Snake_game main.cpp
         include/MainMenu.hpp
         src/MainMenu.cpp
         src/SettingsMenu.cpp
-        include/PlayersSettingsChoiceMenu.hpp
-        src/PlayersSettingsChoiceMenu.cpp
+        include/PlayersSelectionMenu.hpp
+        src/PlayersSelectionMenu.cpp
         include/PlayerSettingsMenu.hpp
         src/PlayerSettingsMenu.cpp
 

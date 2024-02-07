@@ -2,7 +2,7 @@
 #define SETTINGS_HPP
 
 #include "Menu.hpp"
-#include "PlayersSettingsChoiceMenu.hpp"
+#include "PlayersSelectionMenu.hpp"
 
 class SettingsMenu: public Menu
 {
@@ -14,25 +14,26 @@ public:
         PLAYERS_AMOUNT,
         LEVEL,
         DIFFICULTY,
+        PLAYER_SETTINGS,
 
         max_choices
     };
 
-    explicit SettingsMenu(const std::vector<const char *>& choices);
+    explicit SettingsMenu(const std::vector<std::string>& choices);
 
     void startMenu() override;
 
 private:
 
-    void setDefaultMenu() override;
+    void makePlayersSelectionMenu();
 
     void displayMenu() const override;
-
-    void handleInput() override;
 
     void changeValue(int& value, int minValue, int maxValue);
 
     void handleChangesValue(int& value, int minValue, int maxValue);
+
+    void handleEvent(const Event& event);
 
 private:
 

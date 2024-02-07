@@ -2,7 +2,7 @@
 
 #include "graphics.hpp"
 
-Menu::Menu(const std::vector<const char*>& choices, int startY, int startX, int width, int height)
+Menu::Menu(const std::vector<std::string>& choices, int startY, int startX, int width, int height)
     :m_choices{choices}, m_width{width}, m_height{height}
 {
     if(width == 0 && height == 0)
@@ -28,13 +28,11 @@ Menu::Menu(const std::vector<const char*>& choices, int startY, int startX, int 
 }
 
 
-void Menu::handleInput()
+Event Menu::handleInput()
 {
     int choice { wgetch(m_win) };
     switch (choice)
     {
-        case ERR: return;
-
         case 'w':
         case KEY_UP:
             if (m_highlight != 0) //We do not allow moving the
@@ -43,15 +41,19 @@ void Menu::handleInput()
 
         case 's':
         case KEY_DOWN:
-            if (m_highlight != 2)
+            if (m_highlight != m_choices.size() - 1)
                 ++m_highlight;
             break;
 
         case 10: //10 means KEY_ENTER
-            m_currentChoice = m_highlight;
+            return ENTER_PRESSED;
 
+        case 27: //27 means KEY_ESC
+            return ESC_PRESSED;
         default: ;
     }
+
+    return max_events;
 }
 
 void Menu::clearWindow()
@@ -67,4 +69,14 @@ void Menu::updateWidthHeight()
     wclear(m_win);
     wrefresh(m_win);
     box(m_win, 0, 0);
+}
+
+void Menu::setDefaultMenu()
+{
+    m_highlight = 0;
+    m_currentChoice = -1;
+}
+
+void Menu::handleEvent(const Event& event)
+{
 }
