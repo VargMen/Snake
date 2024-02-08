@@ -10,28 +10,57 @@ public:
     {
         NAME,
         MOVEMENT_KEYS,
-        SNAKE_SYMBOL,
         SNAKE_COLOR,
+        SNAKE_SYMBOL,
 
         max_choices
     };
 
-    explicit PlayerSettingsMenu(const std::vector<std::string>& choices);
+    enum SnakeColors
+    {
+        GREEN,
+        BLUE,
+        RED,
+        YELLOW,
+        GRAY,
+        ORANGE,
+        WHITE,
+        BLACK,
+        CYAN,
+        MAGENTA,
+
+        max_snake_colors
+    };
+
+    explicit PlayerSettingsMenu(int playerIndex, const std::vector<std::string>& choices);
 
     void startMenu() override;
 
 private:
 
+    void handleEvent(const Event& event) override;
+
     void displayMenu() const override;
 
     void changeValue(int& value, int minValue, int maxValue);
 
-    void changeStringValue(std::string& strValue);
+    void changeStringValue(int stringValueIndex, int maxBufferSize);
 
-    void handleChangesValue(int& value, int minValue, int maxValue);
+    std::string getInputStr(int bufferSize);
 
+    void handleChangesValue(int& choice, int minValue, int maxValue);
 
-    bool goBack{false};
+    void handleChangesStringValue(int stringValueIndex, int maxStrSize);
 
+private:
+    int m_playerIndex{};
+    bool m_goBack{false};
+    bool m_saveChanges{false};
+
+    static constexpr char* m_colorsStr[] {"Green", "Blue", "Red", "Yellow", "Gray",
+                                          "Orange", "White", "Black", "Cyan", "Magenta"};
+    int colorIndex{0};
+    std::vector<std::string> m_choicesValue{"Viktor", "wsad", "Green", "0"};
 };
+
 #endif //PLAYERSETTINGSMENU_H

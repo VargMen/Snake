@@ -23,20 +23,18 @@ namespace settings
 
 
 
-    constexpr int playersAmount {3};
+    constexpr int playersAmount {2};
 
     constexpr std::array<std::string_view, playersAmount> allKeys
     {
         "wsad", //Player 1
         "ikjl", // Player 2
-        "tgfh"
     };
 
     constexpr std::array<std::string_view, playersAmount> playersNames
     {
-        "Danya", //Player 1
+        "Sergey", //Player 1
         "Vitya", // Player 2
-        "Bot"
     };
 
     constexpr int numOfMenuChoices {3};

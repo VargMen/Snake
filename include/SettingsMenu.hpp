@@ -4,6 +4,8 @@
 #include "Menu.hpp"
 #include "PlayersSelectionMenu.hpp"
 
+
+
 class SettingsMenu: public Menu
 {
 public:
@@ -33,7 +35,7 @@ private:
 
     void handleChangesValue(int& value, int minValue, int maxValue);
 
-    void handleEvent(const Event& event);
+    void handleEvent(const Event& event) override;
 
 private:
 

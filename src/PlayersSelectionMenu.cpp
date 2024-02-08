@@ -1,5 +1,4 @@
 #include "PlayersSelectionMenu.hpp"
-#include "PlayerSettingsMenu.hpp"
 #include "string"
 
 
@@ -47,16 +46,31 @@ void PlayersSelectionMenu::startMenu()
     while(!goBack)
     {
         displayMenu();
-        handleInput();
+        Event event { handleInput() };
 
-        for(int i{1}; i <= m_numOfChoices; ++i)
-        if(m_currentChoice == i)
-        {
-            //PlayerSettingsMenu p{}
-        }
+        handleEvent(event);
     }
 
     clearWindow();
     wrefresh(m_win);
     delwin(m_win);
+}
+
+void PlayersSelectionMenu::makePlayerSettingsMenu(int playerIndex)
+{
+    PlayerSettingsMenu menu{m_currentChoice, {"Name", "Movement keys", "Snake symbol", "Snake color"}};
+    menu.startMenu();
+}
+
+void PlayersSelectionMenu::handleEvent(const Event& event)
+{
+    switch(event)
+    {
+        case ENTER_PRESSED:
+            makePlayerSettingsMenu(m_highlight);
+
+        case ESC_PRESSED:
+            goBack = true;
+        default: ;
+    }
 }

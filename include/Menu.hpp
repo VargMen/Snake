@@ -23,6 +23,8 @@ public:
           int startY = 0, int startX = 0,
           int width = 0, int height = 0);
 
+    //~Menu() { clearWindow(); delwin(m_win); }
+
     virtual void  startMenu() = 0;
 
 protected:

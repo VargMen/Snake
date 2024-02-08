@@ -42,7 +42,7 @@ void SettingsMenu::handleEvent(const Event& event)
 
 void SettingsMenu::makePlayersSelectionMenu()
 {
-    PlayersSelectionMenu menu{m_choicesValue[Choices::PLAYERS_AMOUNT], 10, 10};
+    PlayersSelectionMenu menu{m_choicesValue[Choices::PLAYERS_AMOUNT], m_height/2 + 4, 18};
     menu.startMenu();
 }
 void SettingsMenu::startMenu()
