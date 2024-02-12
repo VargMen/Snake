@@ -189,17 +189,6 @@ void Game::displayState()
     }
     printScore();
 
-    // Define custom characters
-    chtype vline = 186;
-    chtype hline = 205;
-    chtype ulcorner = 201;
-    chtype urcorner = 187;
-    chtype llcorner = 200;
-    chtype lrcorner = 188;
-
-    // Set the custom characters for the border
-    wborder(m_winGame, vline, vline, hline, hline, ulcorner, urcorner, llcorner, lrcorner);
-
     makeGameBorder();
 
     refreshWindow();

@@ -1,8 +1,8 @@
-#include "Menu.hpp"
+#include "BaseMenu.hpp"
 
 #include "graphics.hpp"
 
-Menu::Menu(const std::vector<std::string>& choices, int startY, int startX, int width, int height)
+BaseMenu::BaseMenu(const std::vector<std::string>& choices, int startY, int startX, int width, int height)
     :m_choices{choices}, m_width{width}, m_height{height}
 {
     if(width == 0 && height == 0)
@@ -27,8 +27,19 @@ Menu::Menu(const std::vector<std::string>& choices, int startY, int startX, int 
     m_numOfChoices = static_cast<int>(m_choices.size());
 }
 
+void BaseMenu::start()
+{
+    while(!goBack)
+    {
+        updateWidthHeight();
+        display();
+        Event event { handleInput() };
+        handleEvent(event);
+    }
+}
 
-Event Menu::handleInput()
+
+Event BaseMenu::handleInput()
 {
     int choice { wgetch(m_win) };
     switch (choice)
@@ -56,13 +67,13 @@ Event Menu::handleInput()
     return max_events;
 }
 
-void Menu::clearWindow()
+void BaseMenu::clearWindow()
 {
     clear();
     wclear(m_win);
 }
 
-void Menu::updateWidthHeight()
+void BaseMenu::updateWidthHeight()
 {
     getmaxyx(stdscr, m_height, m_width); //update sizes
     wresize(m_win, m_height, m_width); //make new window
@@ -71,12 +82,12 @@ void Menu::updateWidthHeight()
     box(m_win, 0, 0);
 }
 
-void Menu::setDefaultMenu()
+void BaseMenu::setDefault()
 {
     m_highlight = 0;
     m_currentChoice = -1;
 }
 
-void Menu::handleEvent(const Event& event)
+void BaseMenu::handleEvent(const Event& event)
 {
 }

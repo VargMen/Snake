@@ -1,11 +1,17 @@
 #ifndef PLAYERSETTINGSMENU_H
 #define PLAYERSETTINGSMENU_H
 
-#include "Menu.hpp"
+#include <fstream>
+#include <cassert>
 
-class PlayerSettingsMenu : public Menu
+#include "BaseMenu.hpp"
+
+class PlayerSettingsMenu : public BaseMenu
 {
 public:
+
+    friend class Menu;
+
     enum Choices
     {
         NAME,
@@ -34,13 +40,19 @@ public:
 
     explicit PlayerSettingsMenu(int playerIndex, const std::vector<std::string>& choices);
 
-    void startMenu() override;
+    void start() override;
 
 private:
 
+    void setChoicesValue(const std::array<std::string, 5> values);
+
+    static std::vector<std::array<std::string, 5>> parsePlayersSettingFile(const std::string& fileName);
+
+    static PlayerSettingsMenu** generatePlSettingsMenus();
+
     void handleEvent(const Event& event) override;
 
-    void displayMenu() const override;
+    void display() const override;
 
     void changeValue(int& value, int minValue, int maxValue);
 
@@ -54,13 +66,12 @@ private:
 
 private:
     int m_playerIndex{};
-    bool m_goBack{false};
     bool m_saveChanges{false};
 
     static constexpr char* m_colorsStr[] {"Green", "Blue", "Red", "Yellow", "Gray",
                                           "Orange", "White", "Black", "Cyan", "Magenta"};
     int colorIndex{0};
-    std::vector<std::string> m_choicesValue{"Viktor", "wsad", "Green", "0"};
+    std::vector<std::string> m_choicesValue{};
 };
 
 #endif //PLAYERSETTINGSMENU_H

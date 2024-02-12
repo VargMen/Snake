@@ -1,57 +1,48 @@
-#ifndef MENU_H
-#define MENU_H
+#ifndef MENU_HPP
+#define MENU_HPP
 
-#include <ncurses.h>
-#include <vector>
-#include <string>
+#include "StartMenu.hpp"
+#include "SettingsMenu.hpp"
+#include "PlayersSelectionMenu.hpp"
+#include "PlayerSettingsMenu.hpp"
 
-#include "settings.hpp"
+using namespace std::string_literals;
 
-enum Event
+class Menu
 {
-    ENTER_PRESSED,
-    ESC_PRESSED,
-    SPACE_PRESSED,
-
-    max_events
-};
-
-class Menu {
 public:
+    Menu()
+    {
+        startMenu = new StartMenu{ {"Play", "Settings", "Exit"} };
+        settingsMenu = new SettingsMenu{  {"Players amount", "Level", "Difficulty", "Players settings"} };
+        plSelectionMenu = new PlayersSelectionMenu{};
+        plSettingsMenus = PlayerSettingsMenu::generatePlSettingsMenus();
+    }
 
-    explicit Menu(const std::vector<std::string>& choices,
-          int startY = 0, int startX = 0,
-          int width = 0, int height = 0);
+    ~Menu()
+    {
+        delete startMenu;
+        delete settingsMenu;
+        delete plSelectionMenu;
+        delete[] plSettingsMenus;
+    }
 
-    //~Menu() { clearWindow(); delwin(m_win); }
+    void start()
+    {
+        activeMenu->start();
+    }
 
-    virtual void  startMenu() = 0;
+private:
+    void changeMenu(BaseMenu* newMenu)
+    {
+        activeMenu = newMenu;
+    }
 
-protected:
+    StartMenu* startMenu{};
+    SettingsMenu* settingsMenu{};
+    PlayersSelectionMenu* plSelectionMenu{};
+    PlayerSettingsMenu** plSettingsMenus{};
 
-    virtual void setDefaultMenu();
-
-    virtual void displayMenu() const = 0;
-
-    virtual Event handleInput();
-
-    virtual void handleEvent(const Event& event);
-
-    void clearWindow();
-
-    void updateWidthHeight();
-
-protected:
-    bool isResizable{};
-    bool goBack{};
-    int m_width{};
-    int m_height{};
-    int m_numOfChoices{};
-    WINDOW *m_win{};
-    std::vector<std::string> m_choices{};
-    int m_highlight{};
-    int m_currentChoice{-1};
+    BaseMenu* activeMenu{};
 };
-
-
-#endif //MENU_H
+#endif //MENU_HPP

@@ -20,15 +20,12 @@ std::vector<std::string> PlayersSelectionMenu::generateChoices(int playersAmount
     return players;
 }
 
-PlayersSelectionMenu::PlayersSelectionMenu(int playerAmounts, int startY,
-                                           int startX)
-                           : Menu{ {generateChoices(playerAmounts) },
-                                  startY, startX, 10, playerAmounts + 2}
+PlayersSelectionMenu::PlayersSelectionMenu()
+        : BaseMenu {generateChoices(5) }
 {
-    displayMenu();
 }
 
-void PlayersSelectionMenu::displayMenu() const
+void PlayersSelectionMenu::display() const
 {
     for (int i{0}; i < m_numOfChoices; ++i)
     {
@@ -39,27 +36,6 @@ void PlayersSelectionMenu::displayMenu() const
         mvwprintw(m_win, i + 1, 1, "%s", m_choices[i].c_str());
         wattroff(m_win, A_REVERSE);
     }
-}
-
-void PlayersSelectionMenu::startMenu()
-{
-    while(!goBack)
-    {
-        displayMenu();
-        Event event { handleInput() };
-
-        handleEvent(event);
-    }
-
-    clearWindow();
-    wrefresh(m_win);
-    delwin(m_win);
-}
-
-void PlayersSelectionMenu::makePlayerSettingsMenu(int playerIndex)
-{
-    PlayerSettingsMenu menu{m_currentChoice, {"Name", "Movement keys", "Snake symbol", "Snake color"}};
-    menu.startMenu();
 }
 
 void PlayersSelectionMenu::handleEvent(const Event& event)

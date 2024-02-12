@@ -1,15 +1,15 @@
-#ifndef SETTINGS_HPP
-#define SETTINGS_HPP
+#ifndef SETTINGSMENU_HPP
+#define SETTINGSMENU_HPP
 
-#include "Menu.hpp"
+#include "BaseMenu.hpp"
 #include "PlayersSelectionMenu.hpp"
 
 
 
-class SettingsMenu: public Menu
+class SettingsMenu: public BaseMenu
 {
 public:
-    friend class MainMenu;
+    friend class StartMenu;
 
     enum Choices
     {
@@ -23,13 +23,11 @@ public:
 
     explicit SettingsMenu(const std::vector<std::string>& choices);
 
-    void startMenu() override;
+    void start() override;
 
 private:
 
-    void makePlayersSelectionMenu();
-
-    void displayMenu() const override;
+    void display() const override;
 
     void changeValue(int& value, int minValue, int maxValue);
 
@@ -43,4 +41,4 @@ private:
     bool saveChanges{false};
     bool goBack{false};
 };
-#endif //SETTINGS_HPP
+#endif //SETTINGSMENU_HPP

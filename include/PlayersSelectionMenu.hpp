@@ -1,27 +1,24 @@
-#ifndef PLAYERSLECTIONMENU_H
-#define PLAYERSLECTIONMENU_H
+#ifndef PLAYERSELECTIONMENU_HPP
+#define PLAYERSELECTIONMENU_HPP
 
-#include "Menu.hpp"
+#include "BaseMenu.hpp"
 #include "PlayerSettingsMenu.hpp"
 
-class PlayersSelectionMenu : public Menu
+class PlayersSelectionMenu : public BaseMenu
 {
 public:
 
-    explicit PlayersSelectionMenu(int playerAmounts, int startY, int startX);
-
-    void startMenu() override;
+    explicit PlayersSelectionMenu();
 
 private:
 
-    void makePlayerSettingsMenu(int playerIndex);
-
     void handleEvent(const Event& event) override;
 
-    void displayMenu() const override;
+    void display() const override;
 
     static std::vector<std::string> generateChoices(int playersAmount);
 
     bool goBack{false};
 };
-#endif //PLAYERSLECTIONMENU_H
+
+#endif //PLAYERSELECTIONMENU_HPP

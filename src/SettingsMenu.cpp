@@ -2,9 +2,8 @@
 
 
 SettingsMenu::SettingsMenu(const std::vector<std::string>& choices)
-        :Menu(choices)
+        : BaseMenu(choices)
 {
-    displayMenu();
 }
 
 void SettingsMenu::handleEvent(const Event& event)
@@ -28,7 +27,7 @@ void SettingsMenu::handleEvent(const Event& event)
                     return;
 
                 case PLAYER_SETTINGS:
-                    makePlayersSelectionMenu();
+
                     return;
                 default: ;
             }
@@ -40,17 +39,12 @@ void SettingsMenu::handleEvent(const Event& event)
     }
 }
 
-void SettingsMenu::makePlayersSelectionMenu()
-{
-    PlayersSelectionMenu menu{m_choicesValue[Choices::PLAYERS_AMOUNT], m_height/2 + 4, 18};
-    menu.startMenu();
-}
-void SettingsMenu::startMenu()
+void SettingsMenu::start()
 {
     while(!goBack)
     {
         updateWidthHeight();
-        displayMenu();
+        display();
         Event event { handleInput() };
         handleEvent(event);
     }
@@ -61,12 +55,12 @@ void SettingsMenu::handleChangesValue(int& value, int minValue, int maxValue)
     do
     {
         changeValue(value, minValue, maxValue);
-        displayMenu();
+        display();
     }while(!saveChanges); //while we are trying to get appropriate value
     saveChanges = false;
 }
 
-void SettingsMenu::displayMenu() const
+void SettingsMenu::display() const
 {
     mvwprintw(m_win, 2, m_width/2 - 4, "Settings");
 

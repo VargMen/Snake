@@ -9,7 +9,7 @@
 #include "Snake.hpp"
 #include "Food.hpp"
 #include "Player.hpp"
-#include "Menu.hpp"
+#include "BaseMenu.hpp"
 #include "Scores.hpp"
 
 #include "Point.hpp"
@@ -20,7 +20,7 @@ class Game
 {
 public:
 
-    friend class MainMenu;
+    friend class StartMenu;
 
     Game();
 
