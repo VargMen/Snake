@@ -2,40 +2,18 @@
 
 #include "graphics.hpp"
 
-BaseMenu::BaseMenu(const std::vector<std::string>& choices, int startY, int startX, int width, int height)
-    :m_choices{choices}, m_width{width}, m_height{height}
+
+BaseMenu::BaseMenu()
 {
-    if(width == 0 && height == 0)
-    {
-        isResizable = true;
-        getmaxyx(stdscr, m_height, m_width);
-        m_win = newwin(m_height, m_width, startY, startX);
-        box(m_win, 0, 0);
-    }
-    else
-    {
-        isResizable = false;
-        m_win = newwin(m_height, m_width, startY, startX);
-        box(m_win, 0, 0);
-    }
+    getmaxyx(stdscr, m_height, m_width);
+    m_win = newwin(m_height, m_width, 0, 0);
+    box(m_win, 0, 0);
 
     keypad(m_win, TRUE);
+
     //graphics::initColor();
 
     //graphics::setMenuColor(m_win);
-
-    m_numOfChoices = static_cast<int>(m_choices.size());
-}
-
-void BaseMenu::start()
-{
-    while(!goBack)
-    {
-        updateWidthHeight();
-        display();
-        Event event { handleInput() };
-        handleEvent(event);
-    }
 }
 
 
@@ -88,6 +66,22 @@ void BaseMenu::setDefault()
     m_currentChoice = -1;
 }
 
-void BaseMenu::handleEvent(const Event& event)
+int& BaseMenu::getIntChoiceValue(int index)
 {
+    return std::get<int>(m_choicesValues[index]);
+}
+
+int BaseMenu::getConstIntChoiceValue(int index) const
+{
+    return std::get<int>(m_choicesValues[index]);
+}
+
+std::string& BaseMenu::getStrChoiceValue(int index)
+{
+    return std::get<std::string>(m_choicesValues[index]);
+}
+
+std::string BaseMenu::getConstStrChoiceValue(int index) const
+{
+    return std::get<std::string>(m_choicesValues[index]);
 }

@@ -1,53 +1,89 @@
 #include "SettingsMenu.hpp"
 
 
-SettingsMenu::SettingsMenu(const std::vector<std::string>& choices)
-        : BaseMenu(choices)
+SettingsMenu::SettingsMenu()
 {
+    m_choices = {"Players amount", "Level", "Difficulty", "Players settings"};
+
+    std::vector<int> choicesValues { parseSettingFile("../settings.txt") };
+
+    assert(choicesValues.size() == m_choices.size() - 1 && "Bad amount of choices values in SettingsMenu()");
+
+    for(const auto& value: choicesValues)
+    {
+        m_choicesValues.emplace_back(value);
+    }
 }
 
-void SettingsMenu::handleEvent(const Event& event)
+std::vector<int> SettingsMenu::parseSettingFile(const std::string& fileName)
+{
+    std::fstream settingsFile { fileName };
+
+    if (!settingsFile.is_open())
+        assert(0 && "failed to open playerSettingFile in parsePlayerSettings()");
+
+    std::vector<int> settingsValues{};
+    settingsValues.reserve(settings::maxSettingsChoices);
+
+    std::string line;
+
+    while (std::getline(settingsFile, line))
+    {
+        size_t colonIndex { line.find(':') };
+        if(colonIndex != std::string::npos)
+        {
+            int value { stoi(line.substr(colonIndex + 2)) };
+            settingsValues.emplace_back(value);
+        }
+    }
+
+    return settingsValues;
+}
+
+void SettingsMenu::saveSettingsValues(const std::vector<std::variant<int, std::string>>& values,
+                        const char* settingsFilePath)
+{
+    assert(values.size() == settings::maxSettingsChoices && "Bad amount of values for choices in saveSettingsValues()");
+
+    std::ofstream settingsFile{ settingsFilePath, std::ios::out | std::ios::trunc };
+
+    for(int i{0}; i < settings::maxSettingsChoices; ++i)
+    {
+        settingsFile << m_choices[i] << ": " << getIntChoiceValue(i) << '\n';
+    }
+}
+
+
+Menus SettingsMenu::handleEvent(const Event& event)
 {
     switch(event)
     {
         case ENTER_PRESSED:
+
             m_currentChoice = m_highlight;
             switch(m_currentChoice)
             {
                 case Choices::PLAYERS_AMOUNT:
-                    handleChangesValue(m_choicesValue[Choices::PLAYERS_AMOUNT], 1, 5);
-                    return;
+                    handleChangesValue(getIntChoiceValue(PLAYERS_AMOUNT), 1, 96);
+                    break;
 
                 case Choices::LEVEL:
-                    handleChangesValue(m_choicesValue[Choices::LEVEL], 1, 8);
-                    return;
-
                 case Choices::DIFFICULTY:
-                    handleChangesValue(m_choicesValue[Choices::DIFFICULTY], 1, 8);
-                    return;
+                    handleChangesValue(getIntChoiceValue(m_currentChoice), 1, 8);
+                    break;
 
-                case PLAYER_SETTINGS:
-
-                    return;
+                case PLAYERS_SETTINGS:
+                    return PLAYER_SELECTION_MENU;
                 default: ;
             }
             break;
 
         case ESC_PRESSED:
-            goBack = true;
+            saveSettingsValues(m_choicesValues, "../settings.txt");
+            return START_MENU;
         default: ;
     }
-}
-
-void SettingsMenu::start()
-{
-    while(!goBack)
-    {
-        updateWidthHeight();
-        display();
-        Event event { handleInput() };
-        handleEvent(event);
-    }
+    return max_menus;
 }
 
 void SettingsMenu::handleChangesValue(int& value, int minValue, int maxValue)
@@ -65,14 +101,14 @@ void SettingsMenu::display() const
     mvwprintw(m_win, 2, m_width/2 - 4, "Settings");
 
     int i{0};
-    for (; i < m_numOfChoices - 1; ++i)
+    for (; i < m_choices.size() - 1; ++i)
     {
         if (i == m_highlight)
             wattron(m_win, A_REVERSE);
 
 
         wmove(m_win, m_height/2, 3);
-        mvwprintw(m_win, m_height/2 + i, 2, "%s: %d", m_choices[i].c_str(), m_choicesValue[i]);
+        mvwprintw(m_win, m_height/2 + i, 2, "%s: %d", m_choices[i].c_str(), getConstIntChoiceValue(i));
         wattroff(m_win, A_REVERSE);
     }
 

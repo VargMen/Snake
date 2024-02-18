@@ -16,16 +16,21 @@ public:
         PLAYERS_AMOUNT,
         LEVEL,
         DIFFICULTY,
-        PLAYER_SETTINGS,
+        PLAYERS_SETTINGS,
 
         max_choices
     };
 
-    explicit SettingsMenu(const std::vector<std::string>& choices);
+    explicit SettingsMenu();
 
-    void start() override;
+    ~SettingsMenu() override = default;
 
 private:
+
+    static std::vector<int> parseSettingFile(const std::string& fileName);
+
+    void saveSettingsValues(const std::vector<std::variant<int, std::string>>& values,
+                            const char* settingsFilePath);
 
     void display() const override;
 
@@ -33,12 +38,10 @@ private:
 
     void handleChangesValue(int& value, int minValue, int maxValue);
 
-    void handleEvent(const Event& event) override;
+    Menus handleEvent(const Event& event) override;
 
 private:
-
-    std::vector<int> m_choicesValue{3, 1, 4}; //here 3 is playersAmount etc
     bool saveChanges{false};
-    bool goBack{false};
 };
+
 #endif //SETTINGSMENU_HPP

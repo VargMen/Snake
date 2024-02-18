@@ -5,29 +5,22 @@
 std::vector<std::string> PlayersSelectionMenu::generateChoices(int playersAmount)
 {
     std::vector<std::string> players{};
-    std::string player{ "PLayer  "};
-    for(int i{1}; i <= playersAmount; ++i)
-    {
-        i += 48; //convert to char
 
-        player[7] = static_cast<char>(i);
-
-        i -= 48; //convert to int
-
-        players.push_back(player);
+    for (int i = 1; i <= playersAmount; ++i) {
+        players.push_back("Player " + std::to_string(i));
     }
 
     return players;
 }
 
-PlayersSelectionMenu::PlayersSelectionMenu()
-        : BaseMenu {generateChoices(5) }
+PlayersSelectionMenu::PlayersSelectionMenu(int playersAmount)
 {
+    m_choices = generateChoices(playersAmount);
 }
 
 void PlayersSelectionMenu::display() const
 {
-    for (int i{0}; i < m_numOfChoices; ++i)
+    for (int i{0}; i < m_choices.size(); ++i)
     {
         if (i == m_highlight)
             wattron(m_win, A_REVERSE);
@@ -38,15 +31,15 @@ void PlayersSelectionMenu::display() const
     }
 }
 
-void PlayersSelectionMenu::handleEvent(const Event& event)
+Menus PlayersSelectionMenu::handleEvent(const Event& event)
 {
     switch(event)
     {
         case ENTER_PRESSED:
-            makePlayerSettingsMenu(m_highlight);
-
-        case ESC_PRESSED:
-            goBack = true;
+            return static_cast<Menus>(m_highlight + settings::playerSettingsMenusBias); //in the Menus enum the menu for the player starts at index 3,
+        case ESC_PRESSED:                                                               //so we have to add bias to get the appropriate player settings menu
+            return SETTINGS_MENU;
         default: ;
     }
+    return max_menus;
 }

@@ -22,6 +22,11 @@ namespace settings
     constexpr int pauseTimeReduceStep{20};
 
 
+    constexpr int playerSettingsMenusBias {3};
+
+    constexpr int maxSettingsChoices{3};
+
+    constexpr int maxPlayerSettings{4};
 
     constexpr int playersAmount {2};
 

@@ -3,38 +3,39 @@
 using namespace std::string_literals;
 
 
-StartMenu::StartMenu(const std::vector<std::string>& choices)
-                    : BaseMenu(choices)
+StartMenu::StartMenu()
 {
+    m_choices = {"Play", "Settings", "Exit"};
 }
 
-void StartMenu::handleEvent(const Event& event)
+Menus StartMenu::handleEvent(const Event& event)
 {
     switch(event)
     {
         case ENTER_PRESSED:
             m_currentChoice = m_highlight;
+
             switch(m_currentChoice)
             {
                 case Choices::PLAY:
+                    clearWindow();
                     makeGame();
                     setDefault();
-                    return;
+                    return max_menus;
 
                 case Choices::SETTINGS:
-                    //make settings
-                    setDefault();
-                    return;
+                    return SETTINGS_MENU;
 
                 case Choices::EXIT:
-                    abort();
+                    goBack = true;
                 default: ;
             }
            break;
         case ESC_PRESSED:
-
+            goBack = true;
         default: ;
     }
+    return max_menus;
 }
 
 void StartMenu::makeGame()
@@ -53,7 +54,7 @@ void StartMenu::display() const
         wprintw(m_win, "%s", snake);
     }
 
-    for (int i{0}; i < m_numOfChoices; ++i)
+    for (int i{0}; i < m_choices.size(); ++i)
     {
         if (i == m_highlight)
             wattron(m_win, A_REVERSE);

@@ -6,6 +6,8 @@
 
 #include "BaseMenu.hpp"
 
+#include <iostream>
+
 class PlayerSettingsMenu : public BaseMenu
 {
 public:
@@ -38,19 +40,17 @@ public:
         max_snake_colors
     };
 
-    explicit PlayerSettingsMenu(int playerIndex, const std::vector<std::string>& choices);
+    explicit PlayerSettingsMenu(int playerIndex);
 
-    void start() override;
+    ~PlayerSettingsMenu() override;
 
 private:
 
-    void setChoicesValue(const std::array<std::string, 5> values);
+    static std::vector<std::vector<std::string>> parsePlayersSettingFile(const std::string& fileName);
 
-    static std::vector<std::array<std::string, 5>> parsePlayersSettingFile(const std::string& fileName);
+    static PlayerSettingsMenu** generatePlSettingsMenus(int playersAmount);
 
-    static PlayerSettingsMenu** generatePlSettingsMenus();
-
-    void handleEvent(const Event& event) override;
+    Menus handleEvent(const Event& event) override;
 
     void display() const override;
 
@@ -64,14 +64,22 @@ private:
 
     void handleChangesStringValue(int stringValueIndex, int maxStrSize);
 
+    void setChoicesValue(const std::vector<std::string>& values);
+
+    int getIndexValue(int index) const override;
+
+    static void setPlayersAmount(int playersAmount) { m_playersAmount = playersAmount; }
+
 private:
+
+    static int m_playersAmount;
+
     int m_playerIndex{};
     bool m_saveChanges{false};
-
+    static bool m_isSettingSaved;
     static constexpr char* m_colorsStr[] {"Green", "Blue", "Red", "Yellow", "Gray",
                                           "Orange", "White", "Black", "Cyan", "Magenta"};
-    int colorIndex{0};
-    std::vector<std::string> m_choicesValue{};
+    int m_colorIndex{1};
 };
 
 #endif //PLAYERSETTINGSMENU_H

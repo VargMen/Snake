@@ -8,17 +8,16 @@ class PlayersSelectionMenu : public BaseMenu
 {
 public:
 
-    explicit PlayersSelectionMenu();
+    explicit PlayersSelectionMenu(int playerAmount);
 
+    ~PlayersSelectionMenu() override = default;
 private:
 
-    void handleEvent(const Event& event) override;
+    Menus handleEvent(const Event& event) override;
 
     void display() const override;
 
     static std::vector<std::string> generateChoices(int playersAmount);
-
-    bool goBack{false};
 };
 
 #endif //PLAYERSELECTIONMENU_HPP

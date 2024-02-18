@@ -22,8 +22,3 @@ Movement keys: 8546
 Snake color: 7
 Snake symbol: Q
 
-Player 5:
-Name: Bot3
-Movement keys: -
-Snake color: -
-Snake symbol: -

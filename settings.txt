@@ -1,0 +1,3 @@
+Players amount: 4
+Level: 6
+Difficulty: 4
