@@ -69,3 +69,14 @@ Snake::Direction operator-(const Snake::Direction& dir)
             assert(0 && "Bad direction in operator-");
     }
 }
+
+bool Snake::isHitItself() const
+{
+    if(m_snakePos.size() == 1)
+    {
+        return false;
+    }
+    auto it { std::find(m_snakePos.begin() + 1, m_snakePos.end(), m_snakePos.front()) };
+
+    return it != m_snakePos.end();
+}

@@ -12,14 +12,11 @@ class Board
 public:
     enum MapSymbols
     {
-        wall = -1,
+        wall = -3,
         space,
-        firstSnake,
-        secondSnake,
-        thirdSnake,
         food,
 
-        max_mapSymbols
+        max_mapSymbols = 99
     };
 
     explicit Board(std::string_view mapName) { initByMap(mapName); }
@@ -30,7 +27,7 @@ public:
 
     int getCellValue(const Point& cell) const { return m_board[cell.x][cell.y]; }
 
-    void setCellValue(const Point& cell, const MapSymbols& symbol) { m_board[cell.x][cell.y] = symbol; }
+    void setCellValue(const Point& cell, int symbol) { m_board[cell.x][cell.y] = symbol; }
 
 
 

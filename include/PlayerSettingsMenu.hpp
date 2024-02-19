@@ -13,16 +13,7 @@ class PlayerSettingsMenu : public BaseMenu
 public:
 
     friend class Menu;
-
-    enum Choices
-    {
-        NAME,
-        MOVEMENT_KEYS,
-        SNAKE_COLOR,
-        SNAKE_SYMBOL,
-
-        max_choices
-    };
+    friend class Game;
 
     enum SnakeColors
     {
@@ -46,11 +37,19 @@ public:
 
 private:
 
-    static std::vector<std::vector<std::string>> parsePlayersSettingFile(const std::string& fileName);
-
     static PlayerSettingsMenu** generatePlSettingsMenus(int playersAmount);
 
+    static void setPlayersAmount(int playersAmount) { m_playersAmount = playersAmount; }
+
+
+
     Menus handleEvent(const Event& event) override;
+
+    void handleChangesValue(int& choice, int minValue, int maxValue);
+
+    void handleChangesStringValue(int stringValueIndex, int maxStrSize);
+
+
 
     void display() const override;
 
@@ -60,20 +59,16 @@ private:
 
     std::string getInputStr(int bufferSize);
 
-    void handleChangesValue(int& choice, int minValue, int maxValue);
 
-    void handleChangesStringValue(int stringValueIndex, int maxStrSize);
 
     void setChoicesValue(const std::vector<std::string>& values);
 
     int getIndexValue(int index) const override;
 
-    static void setPlayersAmount(int playersAmount) { m_playersAmount = playersAmount; }
-
 private:
 
     static int m_playersAmount;
-
+    static const char* m_playerSettingsFilePath;
     int m_playerIndex{};
     bool m_saveChanges{false};
     static bool m_isSettingSaved;

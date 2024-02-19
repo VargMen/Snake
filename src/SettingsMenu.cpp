@@ -1,11 +1,12 @@
 #include "SettingsMenu.hpp"
 
+const char* SettingsMenu::m_settingsFilePath = "../settings.txt";
 
 SettingsMenu::SettingsMenu()
 {
     m_choices = {"Players amount", "Level", "Difficulty", "Players settings"};
 
-    std::vector<int> choicesValues { parseSettingFile("../settings.txt") };
+    std::vector<int> choicesValues { parseSettingFile(m_settingsFilePath) };
 
     assert(choicesValues.size() == m_choices.size() - 1 && "Bad amount of choices values in SettingsMenu()");
 
@@ -41,7 +42,7 @@ std::vector<int> SettingsMenu::parseSettingFile(const std::string& fileName)
 }
 
 void SettingsMenu::saveSettingsValues(const std::vector<std::variant<int, std::string>>& values,
-                        const char* settingsFilePath)
+                                      const std::string& settingsFilePath)
 {
     assert(values.size() == settings::maxSettingsChoices && "Bad amount of values for choices in saveSettingsValues()");
 
@@ -79,7 +80,7 @@ Menus SettingsMenu::handleEvent(const Event& event)
             break;
 
         case ESC_PRESSED:
-            saveSettingsValues(m_choicesValues, "../settings.txt");
+            saveSettingsValues(m_choicesValues, m_settingsFilePath);
             return START_MENU;
         default: ;
     }

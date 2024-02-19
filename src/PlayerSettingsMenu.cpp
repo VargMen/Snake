@@ -1,7 +1,10 @@
 #include "PlayerSettingsMenu.hpp"
 
+#include "PlayersSettings.hpp"
+
 int PlayerSettingsMenu::m_playersAmount = 1;
 bool PlayerSettingsMenu::m_isSettingSaved = false;
+const char* PlayerSettingsMenu::m_playerSettingsFilePath = "../playersSettings.txt";
 
 PlayerSettingsMenu::PlayerSettingsMenu(int playerIndex)
             : m_playerIndex(playerIndex)
@@ -29,7 +32,7 @@ void PlayerSettingsMenu::display() const
         int move_y {m_height/2 + i};
         int move_x {2};
 
-        if(i != Choices::SNAKE_COLOR)
+        if(i != PlayersSettings::SNAKE_COLOR)
         {
             mvwprintw(m_win, move_y, move_x, "%s: %s", m_choices[i].c_str(), getConstStrChoiceValue(i).c_str());
         }
@@ -68,19 +71,19 @@ Menus PlayerSettingsMenu::handleEvent(const Event& event)
             m_currentChoice = m_highlight;
             switch(m_currentChoice)
             {
-                case Choices::NAME:
-                    handleChangesStringValue(NAME, 31);
+                case PlayersSettings::NAME:
+                    handleChangesStringValue(PlayersSettings::NAME, 31);
                     break;
 
-                case Choices::MOVEMENT_KEYS:
-                    handleChangesStringValue(MOVEMENT_KEYS, 4);
+                case PlayersSettings::MOVEMENT_KEYS:
+                    handleChangesStringValue(PlayersSettings::MOVEMENT_KEYS, 4);
                     break;
 
-                case Choices::SNAKE_COLOR:
+                case PlayersSettings::SNAKE_COLOR:
                     handleChangesValue(m_colorIndex, GREEN, MAGENTA);
                     break;
-                case Choices::SNAKE_SYMBOL:
-                    handleChangesStringValue(SNAKE_SYMBOL, 1);
+                case PlayersSettings::SNAKE_SYMBOL:
+                    handleChangesStringValue(PlayersSettings::SNAKE_SYMBOL, 1);
                     break;
             }
             break;
@@ -185,68 +188,6 @@ void PlayerSettingsMenu::handleChangesValue(int& choice, int minValue, int maxVa
     m_saveChanges = false;
 }
 
-std::vector<std::vector<std::string>> PlayerSettingsMenu::parsePlayersSettingFile(const std::string& fileName)
-{
-    std::fstream playerSettingFile { fileName };
-
-    if (!playerSettingFile.is_open())
-        assert(0 && "failed to open playerSettingFile in parsePlayerSettings()");
-
-    std::vector<std::vector<std::string>> playerSettings{};
-
-    playerSettings.resize(m_playersAmount);
-
-    for(std::size_t i{0}; i < m_playersAmount; ++i)
-    {
-        playerSettings[i].resize(settings::maxPlayerSettings);
-    }
-
-    std::string line;
-    int pIndex{0};
-
-    while (pIndex < m_playersAmount)
-    {
-        std::getline(playerSettingFile, line);
-
-
-        std::string playerLine {"Player " + std::to_string(pIndex + 1) + ':'};
-
-
-        size_t pSettingsStart { line.find(playerLine) };
-
-        if(pSettingsStart != std::string::npos)
-        {
-            int settingIndex{0};
-
-            while(settingIndex < settings::maxPlayerSettings)
-            {
-                std::getline(playerSettingFile, line);
-                std::size_t colonIndex { line.find(':') };
-                if(colonIndex != std::string::npos)
-                {
-                    std::string data{line.substr(colonIndex + 2)};
-
-                    playerSettings[pIndex][settingIndex] = data;
-
-                } else {
-                    assert(0 && "bad playerSettingFile in parsePlayerSettings()");
-                }
-                ++settingIndex;
-            }
-
-        } else {
-            for(std::size_t i{0}; i < settings::maxPlayerSettings; ++i)
-            {
-                playerSettings[pIndex][i] = '1';
-            }
-        }
-        std::getline(playerSettingFile, line);
-        ++pIndex;
-    }
-
-    return playerSettings;
-}
-
 int PlayerSettingsMenu::getIndexValue(int index) const
 {
     return m_colorIndex;
@@ -271,7 +212,7 @@ PlayerSettingsMenu** PlayerSettingsMenu::generatePlSettingsMenus(int playersAmou
 {
     PlayerSettingsMenu::setPlayersAmount(playersAmount);
 
-    std::vector<std::vector<std::string>> playerSettings { parsePlayersSettingFile("../playersSettings.txt") };
+    std::vector<std::vector<std::string>> playerSettings { PlayersSettings::parsePlayersSettingFile(m_playerSettingsFilePath, m_playersAmount) };
 
     PlayerSettingsMenu** plSettingsMenus{ new PlayerSettingsMenu*[m_playersAmount]{} };
 

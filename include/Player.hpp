@@ -10,42 +10,49 @@
 class Player
 {
 public:
+    enum PlayerSettings
+    {
+        NAME,
+        MOVEMENT_KEYS,
+        SNAKE_COLOR,
+        SNAKE_SYMBOL
+    };
+
     Player() = default;
 
-    Player(const Point& pos, const Snake::Direction& dir, std::string_view keys, std::string_view name)
-    :m_snake{pos, dir}, m_keys{keys}, m_name{name}
+    Player(const Point& pos, const Snake::Direction& dir, const std::vector<std::string>& playerSettings)
+    :m_snake{pos, dir}, m_playerSettings{playerSettings}
     {
     }
 
     Player& operator=(const Player& player)
     {
-        m_keys = player.m_keys;
-        m_name = player.m_name;
+        m_playerSettings = player.m_playerSettings;
         m_snake = player.m_snake;
     }
 
     void setKeys(const std::string& keys)
     {
-        m_keys = keys;
+        m_playerSettings[MOVEMENT_KEYS] = keys;
     }
 
 
-    std::string_view getKeys() const { return m_keys; }
+    std::string_view getKeys() const { return m_playerSettings[MOVEMENT_KEYS]; }
 
     std::vector<Point> getSnakePos() const { return m_snake.getPos(); }
 
     Point getSnakeHead() const { return m_snake.getHead(); }
 
-    const std::string& getName() const { return m_name; }
+    const std::string& getName() const { return m_playerSettings[NAME]; }
 
     int getSnakeScore() const { return m_snake.getScore(); }
+
+    char getSnakeSymbol() const { return m_playerSettings[SNAKE_SYMBOL].front(); }
 
     Snake& snake() { return m_snake; }
 
 private:
-    std::string m_keys{};
-    std::string m_name{};
-
+    std::vector<std::string> m_playerSettings{};
     Snake m_snake{};
 };
 

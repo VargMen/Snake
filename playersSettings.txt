@@ -2,23 +2,35 @@ Player 1:
 Name: Viktor
 Movement keys: wsad
 Snake color: 5
-Snake symbol: o
+Snake symbol: O
 
 Player 2:
 Name: Danya
 Movement keys: ikjl
 Snake color: 2
-Snake symbol: 0
+Snake symbol: <
 
 Player 3:
-Name: Bot1
+Name: Popik
 Movement keys: tgfh
 Snake color: 0
-Snake symbol: X
+Snake symbol: M
 
 Player 4:
 Name: Bot2
 Movement keys: 8546
 Snake color: 7
 Snake symbol: Q
+
+Player 5:
+Name: 1
+Movement keys: 1
+Snake color: 1
+Snake symbol: 1
+
+Player 6:
+Name: 1
+Movement keys: 1
+Snake color: 1
+Snake symbol: 1
 

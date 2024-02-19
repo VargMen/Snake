@@ -9,6 +9,7 @@
 #include "Snake.hpp"
 #include "Food.hpp"
 #include "Player.hpp"
+#include "PlayerSettingsMenu.hpp"
 #include "BaseMenu.hpp"
 #include "Scores.hpp"
 
@@ -26,15 +27,7 @@ public:
 
     void startGame();
 
-    ~Game()
-    {
-        wclear(m_winGame);
-        wclear(m_winScore);
-
-        wbkgd(m_winGame, graphics::ObjColors::black); //After the game is over, when we return to the menu,
-        refreshWindow();                              //part of the playing field remains displayed,
-        endwin();                                     //so we do this to make it invisible
-    }
+    ~Game();
 
 private:
 
@@ -44,9 +37,6 @@ private:
 
     void spawnOnBoard(const Point& point, char symbol);
 
-
-
-    static std::array<Player, settings::playersAmount> setPlayers();
 
     void setNewDirections(std::vector<Snake::Direction>& directions);
 
@@ -62,11 +52,9 @@ private:
     std::vector<Snake::Direction> handleInput();
 
 
-
     void updateState();
 
     void updatePauseTime();
-
 
 
     void printScore();
@@ -78,11 +66,9 @@ private:
     void displayState();
 
 
-
     void clearWindow();
 
     void refreshWindow();
-
 
 
     void pause() const;
@@ -108,9 +94,12 @@ private:
 
 private:
 
-    WINDOW * m_winGame{};
-    WINDOW * m_winScore{};
-    std::array<Player, settings::playersAmount> m_players;
+    WINDOW* m_winGame{};
+    WINDOW* m_winScore{};
+    std::vector<Player> m_players{};
+    std::vector<Player> m_defaultPlayersSettings{};
+    std::vector<int> m_gameSettings{};
+
     Board m_board{settings::mapPath};
     Food m_food{Point{5, 5} };
     std::vector<int> m_inputs{};

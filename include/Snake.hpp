@@ -4,6 +4,7 @@
 #include <cassert>
 #include <vector>
 #include <iostream>
+#include <algorithm>
 
 #include "Point.hpp"
 #include "settings.hpp"
@@ -47,6 +48,8 @@ public:
 
     bool isAte(const Point& food_pos) const { return m_snakePos.front() == food_pos; }
 
+    bool isHitItself() const;
+
 
 
     int getScore() const { return m_score; }
@@ -56,6 +59,7 @@ public:
     Direction getDir() const { return m_dir; }
 
     Point getHead() const { return m_snakePos[0]; }
+
 
 private:
     std::vector<Point> m_snakePos{};

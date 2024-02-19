@@ -1,11 +1,13 @@
 #include "Game.hpp"
 
+#include "PlayersSettings.hpp"
+
 #include <thread>
 #include <algorithm>
 
 
 Game::Game()
-: m_players{ setPlayers() }
+: m_defaultPlayersSettings{PlayersSettings::generatePLayerSettings(settings::playerSettingsFilePath.data(), PlayersSettings::getPlayersAmount("../settings.txt"))}
 {
     m_winGame = newwin(settings::height, settings::width, settings::bias_x, settings::bias_y);
     m_winScore = newwin(settings::height, 30, 1 + settings::bias_x, settings::width + 2 + settings::bias_y); //30 is size for window with score and etc
@@ -18,26 +20,21 @@ Game::Game()
 
     refresh();
     refreshWindow();
+    m_players = m_defaultPlayersSettings;
 }
 
-std::array<Player, settings::playersAmount> Game::setPlayers()
+Game::~Game()
 {
-    std::array<Player, settings::playersAmount> playersSettings{};
-    int pos{2};
+    wclear(m_winGame);
+    wclear(m_winScore);
 
-    for(size_t i{0}; i < playersSettings.size(); ++i)
-    {
-        playersSettings[i] = Player{ Point{pos, pos}, Snake::Direction::down, settings::allKeys[i],
-                                     settings::playersNames[i]};
-        pos += 3;
-    }
-
-    return playersSettings;
+    wbkgd(m_winGame, graphics::ObjColors::black); //After the game is over, when we return to the menu,
+    refreshWindow();                              //part of the playing field remains displayed,
+    endwin();                                     //so we do this to make it invisible
 }
 
 void Game::startGame()
 {
-
     do {
         std::string loser{};
 
@@ -46,7 +43,6 @@ void Game::startGame()
 
             getInputs();
             displayState();
-
             updateState();
             spawnFood();
             pause();
@@ -62,7 +58,6 @@ void Game::startGame()
         restartGame();
 
     } while(getAnswer() == 'y');
-
 }
 
 void Game::printLoser(const std::string& loser)
@@ -96,22 +91,20 @@ void Game::restartGame()
 {
     m_board = Board{settings::mapPath};
 
-    m_players = setPlayers();
+    m_players = m_defaultPlayersSettings;
 
     m_food = Food{Point{5, 5}};
 }
 
 void Game::spawnSnake()
 {
-    Board::MapSymbols symbols[3] { Board::firstSnake, Board::secondSnake, Board::thirdSnake};
-
     int i{0};
 
     for(auto& player: m_players)
     {
         for(const auto& pos: player.snake().getPos())
         {
-            m_board.setCellValue(pos, symbols[i]);
+            m_board.setCellValue(pos, i);
         }
         ++i;
     }
@@ -153,7 +146,7 @@ void Game::handlePause(int ch)
 
 void Game::setNewDirections(std::vector<Snake::Direction>& directions)
 {
-    for(size_t i{0}; i < settings::playersAmount; ++i)
+    for(size_t i{0}; i < m_players.size(); ++i)
     {
         if(directions[i] == -m_players[i].snake().getDir())
         {
@@ -187,6 +180,7 @@ void Game::displayState()
             spawnOnBoard(Point{i, j}, static_cast<char>(m_board.getCellValue( Point{i, j} )));
         }
     }
+
     printScore();
 
     makeGameBorder();
@@ -266,9 +260,9 @@ void Game::updateState()
     }
 }
 
-void Game::spawnOnBoard(const Point& point, char symbol)
+void Game::spawnOnBoard(const Point& point, char index)
 {
-    switch(symbol)
+    switch(index)
     {
         case Board::MapSymbols::wall:
             graphics::color_mvwaddch(m_winGame, point.x, point.y,
@@ -278,24 +272,16 @@ void Game::spawnOnBoard(const Point& point, char symbol)
             graphics::color_mvwaddch(m_winGame, point.x, point.y,
                                      graphics::ObjColors::space, graphics::spaceSymbol);
             break;
-        case Board::MapSymbols::firstSnake:
-            graphics::color_mvwaddch(m_winGame, point.x, point.y,
-                                     graphics::ObjColors::firstSnake, graphics::playerSymbols[0]);
-            break;
-        case Board::MapSymbols::secondSnake:
-            graphics::color_mvwaddch(m_winGame, point.x, point.y,
-                                     graphics::ObjColors::secondSnake, graphics::playerSymbols[1]);
-            break;
-        case Board::MapSymbols::thirdSnake:
-            graphics::color_mvwaddch(m_winGame, point.x, point.y,
-                                     graphics::ObjColors::thirdSnake, graphics::playerSymbols[2]);
-            break;
+
         case Board::MapSymbols::food:
             graphics::color_mvwaddch(m_winGame, point.x, point.y,
                                      graphics::ObjColors::food, graphics::foodSymbol);
             break;
+
         default:
-            assert(0 && "Bad symbol in spawnOnBoard()");
+            graphics::color_mvwaddch(m_winGame, point.x, point.y,
+                                     graphics::ObjColors::firstSnake, m_players[index].getSnakeSymbol());
+            std::cout << "\nAboba\n";
     }
 }
 
@@ -304,7 +290,7 @@ void Game::printScore()
 {
     int bias{0};
 
-    for(int i{0}; i < settings::playersAmount; i++)
+    for(int i{0}; i < m_players.size(); i++)
     {
         wmove(m_winScore, i + bias , 0);
         wprintw(m_winScore, "%s: %d", m_players[i].getName().c_str(), m_players[i].getSnakeScore());
@@ -338,12 +324,16 @@ std::string_view Game::whoLose()
     }
 
 
-    for(const auto& testedPlayer: m_players)
+    for(auto& testedPlayer: m_players)
     {
         for(const auto& anotherPlayer: m_players)
         {
             if(&testedPlayer == &anotherPlayer)
+            {
+                if(testedPlayer.snake().isHitItself())
+                    return testedPlayer.getName();
                 continue;
+            }
 
             if(isPosAnotherSnake(testedPlayer, anotherPlayer)) //it means testedPlayer is crashed into anotherPlayer
             {
@@ -357,7 +347,7 @@ std::string_view Game::whoLose()
 std::vector<Score> Game::getPlayersScores()
 {
     std::vector<Score> playersScores{};
-    playersScores.reserve(settings::playersAmount);
+    playersScores.reserve(m_players.size());
 
     for(const auto& player: m_players)
     {
