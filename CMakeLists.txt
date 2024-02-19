@@ -14,19 +14,25 @@ add_executable(Snake_game main.cpp
         settings.hpp
         include/Board.hpp
         src/Board.cpp
-        src/Menu.cpp
-        include/Menu.hpp
+        src/BaseMenu.cpp
+        include/BaseMenu.hpp
         graphics.hpp
         include/Scores.hpp
         src/Scores.cpp
         include/SettingsMenu.hpp
-        include/MainMenu.hpp
-        src/MainMenu.cpp
+        include/StartMenu.hpp
+        src/StartMenu.cpp
         src/SettingsMenu.cpp
-        include/PlayersSelectionMenu.hpp
-        src/PlayersSelectionMenu.cpp
         include/PlayerSettingsMenu.hpp
         src/PlayerSettingsMenu.cpp
+        include/Menu.hpp
+        include/PlayersSelectionMenu.hpp
+        src/PlayersSelectionMenu.cpp
+        include/PlayersSettings.hpp
+        src/PlayersSettings.cpp
+        frequentlyUsedVariables.hpp
+        frequentlyUsedVariables.cpp
+        src/Menu.cpp
 
 
 )
