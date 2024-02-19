@@ -30,9 +30,9 @@ add_executable(Snake_game main.cpp
         src/PlayersSelectionMenu.cpp
         include/PlayersSettings.hpp
         src/PlayersSettings.cpp
-        frequentlyUsedVariables.hpp
-        frequentlyUsedVariables.cpp
         src/Menu.cpp
+        include/GraphicsSettings.hpp
+        src/GraphicsSettings.cpp
 
 
 )

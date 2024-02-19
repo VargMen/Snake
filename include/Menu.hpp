@@ -26,8 +26,8 @@ private:
     void savePlayersSettings(const std::string& playerSettingsFile);
 
     void erasePlayersMenus();
-
 private:
+
     bool isSettingsMenuCreated {false};
     std::vector<BaseMenu*> menus{};
     Menus newMenu{max_menus};

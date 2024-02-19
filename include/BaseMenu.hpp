@@ -6,9 +6,9 @@
 #include <string>
 #include <variant>
 
-#include "settings.hpp"
-
 #include <iostream>
+
+#include "GraphicsSettings.hpp"
 
 enum Event
 {
@@ -29,7 +29,8 @@ enum Menus
     max_menus = 99//I don't think there will be a game with more than 96 players
 };
 
-class BaseMenu {
+class BaseMenu
+        {
 public:
     friend class Menu;
 
@@ -62,6 +63,8 @@ protected:
     std::string& getStrChoiceValue(int index);
 
     std::string getConstStrChoiceValue(int index) const;
+
+    void applyTheme(short themeIndex);
 
     virtual int getIndexValue(int value) const { return -1; };
 

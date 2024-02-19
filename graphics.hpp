@@ -18,10 +18,7 @@ namespace graphics
 
     enum ObjColors
     {
-        firstSnake = 1,
-        secondSnake,
-        thirdSnake,
-        food,
+        food = -8,
         wall,
         space,
 
@@ -32,7 +29,7 @@ namespace graphics
         backgroundInGame,
 
         black,
-        max_colors
+        max_colors = 99
     };
 
     constexpr short backgroundColorInGame { MyCOLOR_BLUE };
@@ -49,10 +46,6 @@ namespace graphics
         init_pair(ObjColors::bigWordSnakeInMenu, COLOR_GREEN, backgroundColorInMenu);
 
         init_pair(ObjColors::food, COLOR_RED, backgroundColorInGame);
-
-        init_pair(ObjColors::firstSnake, COLOR_MAGENTA, backgroundColorInGame);
-        init_pair(ObjColors::secondSnake, COLOR_GREEN, backgroundColorInGame);
-        init_pair(ObjColors::thirdSnake, COLOR_CYAN, backgroundColorInGame);
 
         init_pair(ObjColors::wall, COLOR_WHITE, backgroundColorInGame);
         init_pair(ObjColors::space, MyCOLOR_BLUE, MyCOLOR_BLUE);
@@ -92,7 +85,5 @@ namespace graphics
     constexpr char wallSymbol { '#' };
     constexpr char spaceSymbol { ' ' };
     constexpr char foodSymbol { '*'};
-    constexpr char* playerSymbols { "X0D"}; //i should make space at the beginning because of my implementation
-                                          //and last space represent symbol for space
 }
 #endif //GRAPHICS_HPP

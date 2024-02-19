@@ -4,7 +4,7 @@ const char* SettingsMenu::m_settingsFilePath = "../settings.txt";
 
 SettingsMenu::SettingsMenu()
 {
-    m_choices = {"Players amount", "Level", "Difficulty", "Players settings"};
+    m_choices = {"Players amount", "Level", "Difficulty", "Theme", "Players settings"};
 
     std::vector<int> choicesValues { parseSettingFile(m_settingsFilePath) };
 
@@ -24,7 +24,6 @@ std::vector<int> SettingsMenu::parseSettingFile(const std::string& fileName)
         assert(0 && "failed to open playerSettingFile in parsePlayerSettings()");
 
     std::vector<int> settingsValues{};
-    settingsValues.reserve(settings::maxSettingsChoices);
 
     std::string line;
 
@@ -44,11 +43,11 @@ std::vector<int> SettingsMenu::parseSettingFile(const std::string& fileName)
 void SettingsMenu::saveSettingsValues(const std::vector<std::variant<int, std::string>>& values,
                                       const std::string& settingsFilePath)
 {
-    assert(values.size() == settings::maxSettingsChoices && "Bad amount of values for choices in saveSettingsValues()");
+    assert(values.size() == m_choices.size() - 1 && "Bad amount of values for choices in saveSettingsValues()");
 
     std::ofstream settingsFile{ settingsFilePath, std::ios::out | std::ios::trunc };
 
-    for(int i{0}; i < settings::maxSettingsChoices; ++i)
+    for(int i{0}; i < m_choices.size() - 1; ++i)
     {
         settingsFile << m_choices[i] << ": " << getIntChoiceValue(i) << '\n';
     }
@@ -70,7 +69,10 @@ Menus SettingsMenu::handleEvent(const Event& event)
 
                 case Choices::LEVEL:
                 case Choices::DIFFICULTY:
-                    handleChangesValue(getIntChoiceValue(m_currentChoice), 1, 8);
+                    handleChangesValue(getIntChoiceValue(m_currentChoice), 1, 4);
+                    break;
+                case Choices::THEME:
+                    handleChangesThemes(getIntChoiceValue(m_currentChoice), 1, 4);
                     break;
 
                 case PLAYERS_SETTINGS:
@@ -96,6 +98,18 @@ void SettingsMenu::handleChangesValue(int& value, int minValue, int maxValue)
     }while(!saveChanges); //while we are trying to get appropriate value
     saveChanges = false;
 }
+
+void SettingsMenu::handleChangesThemes(int& value, int minValue, int maxValue)
+{
+    do
+    {
+        changeValue(value, minValue, maxValue);
+        GraphicsSettings::setTheme(m_win, value);
+        display();
+    }while(!saveChanges); //while we are trying to get appropriate value
+    saveChanges = false;
+}
+
 
 void SettingsMenu::display() const
 {

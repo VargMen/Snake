@@ -4,8 +4,10 @@ Menu::Menu()
 {
     menus.push_back(new StartMenu{});
     menus.push_back(new SettingsMenu{} );
-
     activeMenu = menus[START_MENU];
+
+    GraphicsSettings::setThemeValue("../settings.txt");
+    activeMenu->applyTheme(GraphicsSettings::m_currentColorPair);
 }
 
 Menu::~Menu()
@@ -22,7 +24,7 @@ void Menu::start()
     {
         updateMenu(); //if newMenu == max_menus it means we don't change menu
                       //otherwise it will change the menu
-
+        activeMenu->applyTheme(GraphicsSettings::m_currentColorPair);
         activeMenu->updateWidthHeight();
         activeMenu->display();
         Event event { activeMenu->handleInput() };

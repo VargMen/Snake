@@ -1,6 +1,7 @@
 #include <cassert>
 
-#include "MainMenu.hpp"
+#include "Menu.hpp"
+#include "GraphicsSettings.hpp"
 
 void initNcurses()
 {
@@ -16,7 +17,10 @@ void initNcurses()
         assert(0 && "Your terminal does not support colors");
     }
 
-    //start_color();
+    start_color();
+
+    GraphicsSettings::initColors();
+
 }
 
 void endNcurses()
@@ -29,9 +33,8 @@ int main() {
 
     initNcurses();
 
-    MainMenu m{ {"Play"s, "Settings"s, "Exit"s} };
-
-    m.startMenu();
+    Menu m{};
+    m.start();
 
     endNcurses();
     return 0;

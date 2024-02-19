@@ -25,11 +25,7 @@ public:
     {
     }
 
-    Player& operator=(const Player& player)
-    {
-        m_playerSettings = player.m_playerSettings;
-        m_snake = player.m_snake;
-    }
+    Player& operator=(const Player& player) = default;
 
     void setKeys(const std::string& keys)
     {
@@ -48,6 +44,8 @@ public:
     int getSnakeScore() const { return m_snake.getScore(); }
 
     char getSnakeSymbol() const { return m_playerSettings[SNAKE_SYMBOL].front(); }
+
+    int getSnakeColor() const { return stoi(m_playerSettings[SNAKE_COLOR]); }
 
     Snake& snake() { return m_snake; }
 

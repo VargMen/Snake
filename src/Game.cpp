@@ -1,26 +1,49 @@
 #include "Game.hpp"
 
 #include "PlayersSettings.hpp"
+#include "GraphicsSettings.hpp"
+#include "SettingsMenu.hpp"
 
 #include <thread>
 #include <algorithm>
 
 
 Game::Game()
-: m_defaultPlayersSettings{PlayersSettings::generatePLayerSettings(settings::playerSettingsFilePath.data(), PlayersSettings::getPlayersAmount("../settings.txt"))}
 {
+    std::vector<int> settingsValue { SettingsMenu::parseSettingFile("../settings.txt") };
+
+    m_defaultPlayersSettings = PlayersSettings::generatePLayerSettings("../playersSettings.txt",
+                                                                       settingsValue[SettingsMenu::PLAYERS_AMOUNT]);
+    m_players = m_defaultPlayersSettings;
+
+    setDifficulty(settingsValue[SettingsMenu::DIFFICULTY]);
+
     m_winGame = newwin(settings::height, settings::width, settings::bias_x, settings::bias_y);
     m_winScore = newwin(settings::height, 30, 1 + settings::bias_x, settings::width + 2 + settings::bias_y); //30 is size for window with score and etc
-
-    graphics::setGameColor(m_winGame);
-    //graphics::setGameColor(m_winScore);
 
     nodelay(stdscr, TRUE);
     scrollok(stdscr, TRUE);
 
     refresh();
     refreshWindow();
-    m_players = m_defaultPlayersSettings;
+
+    GraphicsSettings::setTheme(m_winGame, settingsValue[3]);
+    GraphicsSettings::setTheme(m_winScore, settingsValue[3]);
+    GraphicsSettings::setTheme(stdscr, settingsValue[3]);
+
+    applyColors();
+}
+
+void Game::applyColors()
+{
+    short playerColorIndex = GraphicsSettings::first_player_color;
+
+    for(const auto& player: m_players)
+    {
+        init_pair(playerColorIndex, static_cast<short>(player.getSnakeColor()), GraphicsSettings::m_backgroundColor);
+        ++playerColorIndex;
+    }
+
 }
 
 Game::~Game()
@@ -28,9 +51,9 @@ Game::~Game()
     wclear(m_winGame);
     wclear(m_winScore);
 
-    wbkgd(m_winGame, graphics::ObjColors::black); //After the game is over, when we return to the menu,
-    refreshWindow();                              //part of the playing field remains displayed,
-    endwin();                                     //so we do this to make it invisible
+                      //After the game is over, when we return to the menu,
+    refreshWindow();  //part of the playing field remains displayed,
+    endwin();         //so we do this to make it invisible
 }
 
 void Game::startGame()
@@ -195,8 +218,8 @@ void Game::makeGameBorder()
 
 void Game::updatePauseTime()
 {
-    if(m_pauseTime > settings::smallestPauseTime)
-        m_pauseTime -= settings::pauseTimeReduceStep;
+    if(m_pauseTime > m_smallestPauseTime)
+        m_pauseTime -= m_pauseTimeReduceStep;
 }
 
 void Game::pause() const
@@ -265,23 +288,19 @@ void Game::spawnOnBoard(const Point& point, char index)
     switch(index)
     {
         case Board::MapSymbols::wall:
-            graphics::color_mvwaddch(m_winGame, point.x, point.y,
-                                     graphics::ObjColors::wall, graphics::wallSymbol);
+            mvwaddch(m_winGame, point.x, point.y, ' ');
             break;
         case Board::MapSymbols::space:
-            graphics::color_mvwaddch(m_winGame, point.x, point.y,
-                                     graphics::ObjColors::space, graphics::spaceSymbol);
+            mvwaddch(m_winGame, point.x, point.y, ' ');
             break;
 
         case Board::MapSymbols::food:
-            graphics::color_mvwaddch(m_winGame, point.x, point.y,
-                                     graphics::ObjColors::food, graphics::foodSymbol);
+            mvwaddch(m_winGame, point.x, point.y, '*');
             break;
 
         default:
-            graphics::color_mvwaddch(m_winGame, point.x, point.y,
-                                     graphics::ObjColors::firstSnake, m_players[index].getSnakeSymbol());
-            std::cout << "\nAboba\n";
+            GraphicsSettings::color_mvwaddch(m_winGame, point.x, point.y,
+                                             index + GraphicsSettings::first_player_color, m_players[index].getSnakeSymbol());
     }
 }
 
@@ -363,3 +382,9 @@ void Game::saveScores(const std::vector<Score>& newScores, const char* scoresFil
     scores.updateScores(newScores);
 }
 
+void Game::setDifficulty(int difficulty)
+{
+    m_pauseTime = 300 / difficulty;
+    m_pauseTimeReduceStep = 10 + difficulty * 2;
+    m_smallestPauseTime = 200 / difficulty;
+}

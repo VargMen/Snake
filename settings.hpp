@@ -28,19 +28,9 @@ namespace settings
 
     constexpr int maxPlayerSettings{4};
 
-    constexpr int playersAmount {2};
+    constexpr std::string_view gameSettingsFilePath{ "../settings.txt" };
 
-    constexpr std::array<std::string_view, playersAmount> allKeys
-    {
-        "wsad", //Player 1
-        "ikjl", // Player 2
-    };
-
-    constexpr std::array<std::string_view, playersAmount> playersNames
-    {
-        "Sergey", //Player 1
-        "Vitya", // Player 2
-    };
+    constexpr std::string_view playerSettingsFilePath{ "../playersSettings.txt" };
 
     constexpr int numOfMenuChoices {3};
 

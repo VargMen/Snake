@@ -17,16 +17,16 @@ public:
 
     enum SnakeColors
     {
-        GREEN,
-        BLUE,
-        RED,
-        YELLOW,
-        GRAY,
-        ORANGE,
-        WHITE,
         BLACK,
-        CYAN,
+        RED,
+        GREEN,
+        YELLOW,
+        BLUE,
         MAGENTA,
+        CYAN,
+        WHITE,
+        ORANGE,
+        GRAY,
 
         max_snake_colors
     };
@@ -72,8 +72,8 @@ private:
     int m_playerIndex{};
     bool m_saveChanges{false};
     static bool m_isSettingSaved;
-    static constexpr char* m_colorsStr[] {"Green", "Blue", "Red", "Yellow", "Gray",
-                                          "Orange", "White", "Black", "Cyan", "Magenta"};
+    static constexpr char* m_colorsStr[] {"Black", "Red", "Green", "Yellow", "Blue",
+                                          "Magenta", "Cyan", "White", "Orange", "Grey"};
     int m_colorIndex{1};
 };
 

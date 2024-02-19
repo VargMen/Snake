@@ -1,19 +1,19 @@
 Player 1:
 Name: Viktor
 Movement keys: wsad
-Snake color: 5
-Snake symbol: O
+Snake color: 2
+Snake symbol: G
 
 Player 2:
 Name: Danya
 Movement keys: ikjl
-Snake color: 2
-Snake symbol: <
+Snake color: 1
+Snake symbol: B
 
 Player 3:
 Name: Popik
 Movement keys: tgfh
-Snake color: 0
+Snake color: 4
 Snake symbol: M
 
 Player 4:
@@ -29,6 +29,408 @@ Snake color: 1
 Snake symbol: 1
 
 Player 6:
+Name: 1
+Movement keys: 1
+Snake color: 1
+Snake symbol: 1
+
+Player 7:
+Name: 1
+Movement keys: 1
+Snake color: 1
+Snake symbol: 1
+
+Player 8:
+Name: 1
+Movement keys: 1
+Snake color: 1
+Snake symbol: 1
+
+Player 9:
+Name: 1
+Movement keys: 1
+Snake color: 1
+Snake symbol: 1
+
+Player 10:
+Name: 1
+Movement keys: 1
+Snake color: 1
+Snake symbol: 1
+
+Player 11:
+Name: 1
+Movement keys: 1
+Snake color: 1
+Snake symbol: 1
+
+Player 12:
+Name: 1
+Movement keys: 1
+Snake color: 1
+Snake symbol: 1
+
+Player 13:
+Name: 1
+Movement keys: 1
+Snake color: 1
+Snake symbol: 1
+
+Player 14:
+Name: 1
+Movement keys: 1
+Snake color: 1
+Snake symbol: 1
+
+Player 15:
+Name: 1
+Movement keys: 1
+Snake color: 1
+Snake symbol: 1
+
+Player 16:
+Name: 1
+Movement keys: 1
+Snake color: 1
+Snake symbol: 1
+
+Player 17:
+Name: 1
+Movement keys: 1
+Snake color: 1
+Snake symbol: 1
+
+Player 18:
+Name: 1
+Movement keys: 1
+Snake color: 1
+Snake symbol: 1
+
+Player 19:
+Name: 1
+Movement keys: 1
+Snake color: 1
+Snake symbol: 1
+
+Player 20:
+Name: 1
+Movement keys: 1
+Snake color: 1
+Snake symbol: 1
+
+Player 21:
+Name: 1
+Movement keys: 1
+Snake color: 1
+Snake symbol: 1
+
+Player 22:
+Name: 1
+Movement keys: 1
+Snake color: 1
+Snake symbol: 1
+
+Player 23:
+Name: 1
+Movement keys: 1
+Snake color: 1
+Snake symbol: 1
+
+Player 24:
+Name: 1
+Movement keys: 1
+Snake color: 1
+Snake symbol: 1
+
+Player 25:
+Name: 1
+Movement keys: 1
+Snake color: 1
+Snake symbol: 1
+
+Player 26:
+Name: 1
+Movement keys: 1
+Snake color: 1
+Snake symbol: 1
+
+Player 27:
+Name: 1
+Movement keys: 1
+Snake color: 1
+Snake symbol: 1
+
+Player 28:
+Name: 1
+Movement keys: 1
+Snake color: 1
+Snake symbol: 1
+
+Player 29:
+Name: 1
+Movement keys: 1
+Snake color: 1
+Snake symbol: 1
+
+Player 30:
+Name: 1
+Movement keys: 1
+Snake color: 1
+Snake symbol: 1
+
+Player 31:
+Name: 1
+Movement keys: 1
+Snake color: 1
+Snake symbol: 1
+
+Player 32:
+Name: 1
+Movement keys: 1
+Snake color: 1
+Snake symbol: 1
+
+Player 33:
+Name: 1
+Movement keys: 1
+Snake color: 1
+Snake symbol: 1
+
+Player 34:
+Name: 1
+Movement keys: 1
+Snake color: 1
+Snake symbol: 1
+
+Player 35:
+Name: 1
+Movement keys: 1
+Snake color: 1
+Snake symbol: 1
+
+Player 36:
+Name: 1
+Movement keys: 1
+Snake color: 1
+Snake symbol: 1
+
+Player 37:
+Name: 1
+Movement keys: 1
+Snake color: 1
+Snake symbol: 1
+
+Player 38:
+Name: 1
+Movement keys: 1
+Snake color: 1
+Snake symbol: 1
+
+Player 39:
+Name: 1
+Movement keys: 1
+Snake color: 1
+Snake symbol: 1
+
+Player 40:
+Name: 1
+Movement keys: 1
+Snake color: 1
+Snake symbol: 1
+
+Player 41:
+Name: 1
+Movement keys: 1
+Snake color: 1
+Snake symbol: 1
+
+Player 42:
+Name: 1
+Movement keys: 1
+Snake color: 1
+Snake symbol: 1
+
+Player 43:
+Name: 1
+Movement keys: 1
+Snake color: 1
+Snake symbol: 1
+
+Player 44:
+Name: 1
+Movement keys: 1
+Snake color: 1
+Snake symbol: 1
+
+Player 45:
+Name: 1
+Movement keys: 1
+Snake color: 1
+Snake symbol: 1
+
+Player 46:
+Name: 1
+Movement keys: 1
+Snake color: 1
+Snake symbol: 1
+
+Player 47:
+Name: 1
+Movement keys: 1
+Snake color: 1
+Snake symbol: 1
+
+Player 48:
+Name: 1
+Movement keys: 1
+Snake color: 1
+Snake symbol: 1
+
+Player 49:
+Name: 1
+Movement keys: 1
+Snake color: 1
+Snake symbol: 1
+
+Player 50:
+Name: 1
+Movement keys: 1
+Snake color: 1
+Snake symbol: 1
+
+Player 51:
+Name: 1
+Movement keys: 1
+Snake color: 1
+Snake symbol: 1
+
+Player 52:
+Name: 1
+Movement keys: 1
+Snake color: 1
+Snake symbol: 1
+
+Player 53:
+Name: 1
+Movement keys: 1
+Snake color: 1
+Snake symbol: 1
+
+Player 54:
+Name: 1
+Movement keys: 1
+Snake color: 1
+Snake symbol: 1
+
+Player 55:
+Name: 1
+Movement keys: 1
+Snake color: 1
+Snake symbol: 1
+
+Player 56:
+Name: 1
+Movement keys: 1
+Snake color: 1
+Snake symbol: 1
+
+Player 57:
+Name: 1
+Movement keys: 1
+Snake color: 1
+Snake symbol: 1
+
+Player 58:
+Name: 1
+Movement keys: 1
+Snake color: 1
+Snake symbol: 1
+
+Player 59:
+Name: 1
+Movement keys: 1
+Snake color: 1
+Snake symbol: 1
+
+Player 60:
+Name: 1
+Movement keys: 1
+Snake color: 1
+Snake symbol: 1
+
+Player 61:
+Name: 1
+Movement keys: 1
+Snake color: 1
+Snake symbol: 1
+
+Player 62:
+Name: 1
+Movement keys: 1
+Snake color: 1
+Snake symbol: 1
+
+Player 63:
+Name: 1
+Movement keys: 1
+Snake color: 1
+Snake symbol: 1
+
+Player 64:
+Name: 1
+Movement keys: 1
+Snake color: 1
+Snake symbol: 1
+
+Player 65:
+Name: 1
+Movement keys: 1
+Snake color: 1
+Snake symbol: 1
+
+Player 66:
+Name: 1
+Movement keys: 1
+Snake color: 1
+Snake symbol: 1
+
+Player 67:
+Name: 1
+Movement keys: 1
+Snake color: 1
+Snake symbol: 1
+
+Player 68:
+Name: 1
+Movement keys: 1
+Snake color: 1
+Snake symbol: 1
+
+Player 69:
+Name: 1
+Movement keys: 1
+Snake color: 1
+Snake symbol: 1
+
+Player 70:
+Name: 1
+Movement keys: 1
+Snake color: 1
+Snake symbol: 1
+
+Player 71:
+Name: 1
+Movement keys: 1
+Snake color: 1
+Snake symbol: 1
+
+Player 72:
+Name: 1
+Movement keys: 1
+Snake color: 1
+Snake symbol: 1
+
+Player 73:
 Name: 1
 Movement keys: 1
 Snake color: 1

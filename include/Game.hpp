@@ -15,7 +15,6 @@
 
 #include "Point.hpp"
 #include "settings.hpp"
-#include "graphics.hpp"
 
 class Game
 {
@@ -31,6 +30,8 @@ public:
 
 private:
 
+    void applyColors();
+
     void spawnSnake();
 
     void spawnFood();
@@ -40,6 +41,9 @@ private:
 
     void setNewDirections(std::vector<Snake::Direction>& directions);
 
+    void setDifficulty(int difficulty);
+
+
 
     int getAnswer();
 
@@ -47,7 +51,7 @@ private:
 
     std::string_view whoLose();
 
-    static void handlePause(int ch) ;
+    static void handlePause(int ch);
 
     std::vector<Snake::Direction> handleInput();
 
@@ -103,7 +107,10 @@ private:
     Board m_board{settings::mapPath};
     Food m_food{Point{5, 5} };
     std::vector<int> m_inputs{};
-    int m_pauseTime {settings::firstPauseTime};
+
+    int m_pauseTime {};
+    int m_smallestPauseTime{};
+    int m_pauseTimeReduceStep{};
 };
 
 

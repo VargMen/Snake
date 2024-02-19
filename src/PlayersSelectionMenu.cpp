@@ -36,7 +36,7 @@ Menus PlayersSelectionMenu::handleEvent(const Event& event)
     switch(event)
     {
         case ENTER_PRESSED:
-            return static_cast<Menus>(m_highlight + settings::playerSettingsMenusBias); //in the Menus enum the menu for the player starts at index 3,
+            return static_cast<Menus>(m_highlight + 3); //in the Menus enum the menu for the player starts at index 3,
         case ESC_PRESSED:                                                               //so we have to add bias to get the appropriate player settings menu
             return SETTINGS_MENU;
         default: ;

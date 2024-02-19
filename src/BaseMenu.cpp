@@ -1,19 +1,14 @@
 #include "BaseMenu.hpp"
 
-#include "graphics.hpp"
-
-
 BaseMenu::BaseMenu()
 {
     getmaxyx(stdscr, m_height, m_width);
     m_win = newwin(m_height, m_width, 0, 0);
     box(m_win, 0, 0);
 
+    GraphicsSettings::setTheme(m_win, GraphicsSettings::m_currentColorPair);
+
     keypad(m_win, TRUE);
-
-    //graphics::initColor();
-
-    //graphics::setMenuColor(m_win);
 }
 
 
@@ -64,6 +59,11 @@ void BaseMenu::setDefault()
 {
     m_highlight = 0;
     m_currentChoice = -1;
+}
+
+void BaseMenu::applyTheme(short themeIndex)
+{
+    GraphicsSettings::setTheme(m_win, themeIndex);
 }
 
 int& BaseMenu::getIntChoiceValue(int index)

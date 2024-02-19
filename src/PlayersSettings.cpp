@@ -1,7 +1,5 @@
 #include "PlayersSettings.hpp"
 
-#include "frequentlyUsedVariables.hpp"
-
 std::vector<std::vector<std::string>> PlayersSettings::parsePlayersSettingFile(const std::string& fileName, int playerAmounts)
 {
     std::fstream playerSettingFile { fileName };

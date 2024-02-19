@@ -80,7 +80,7 @@ Menus PlayerSettingsMenu::handleEvent(const Event& event)
                     break;
 
                 case PlayersSettings::SNAKE_COLOR:
-                    handleChangesValue(m_colorIndex, GREEN, MAGENTA);
+                    handleChangesValue(m_colorIndex, BLACK, GRAY);
                     break;
                 case PlayersSettings::SNAKE_SYMBOL:
                     handleChangesStringValue(PlayersSettings::SNAKE_SYMBOL, 1);
