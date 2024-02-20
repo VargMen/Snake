@@ -14,13 +14,23 @@
 #include "Scores.hpp"
 
 #include "Point.hpp"
-#include "settings.hpp"
 
 class Game
 {
 public:
-
     friend class StartMenu;
+
+    struct Map
+    {
+        Map(const std::string& mapFilePath, int width, int height)
+            :m_mapFilePath(mapFilePath), m_width(width), m_height(height)
+        {
+        }
+
+        std::string m_mapFilePath{};
+        int m_width;
+        int m_height;
+    };
 
     Game();
 
@@ -43,6 +53,15 @@ private:
 
     void setDifficulty(int difficulty);
 
+    void setMaps();
+
+    void setBoard(int levelIndex);
+
+    void setPlayers(int playersAmount);
+
+    void setWindows();
+
+    void setThemes(int themeIndex);
 
 
     int getAnswer();
@@ -67,6 +86,7 @@ private:
 
     void printLoser(const std::string& loser);
 
+
     void displayState();
 
 
@@ -81,6 +101,10 @@ private:
 
 
     void makeGameBorder();
+
+    Point makeRandomPoint();
+
+    std::vector<Point> makePlayersInitPos(int playersAmount);
 
 
     static bool isPosAnotherSnake(const Player& testedSnake,
@@ -104,13 +128,22 @@ private:
     std::vector<Player> m_defaultPlayersSettings{};
     std::vector<int> m_gameSettings{};
 
-    Board m_board{settings::mapPath};
+    Board m_board;
+    int m_mapWidth{};
+    int m_mapHeight{};
+
     Food m_food{Point{5, 5} };
+
     std::vector<int> m_inputs{};
 
     int m_pauseTime {};
     int m_smallestPauseTime{};
     int m_pauseTimeReduceStep{};
+
+    std::vector<Map> m_maps{};
+    int m_currentMapIndex{};
+
+    bool isGameSet{true};
 };
 
 

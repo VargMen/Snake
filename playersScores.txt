@@ -1,3 +1,5 @@
 1.Viktor: 19
 2.Danya: 2
 3.Popik: 1
+4.Bot2: 1
+5.Vasya: 0

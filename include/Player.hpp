@@ -18,7 +18,10 @@ public:
         SNAKE_SYMBOL
     };
 
-    Player() = default;
+    Player()
+    {
+
+    }
 
     Player(const Point& pos, const Snake::Direction& dir, const std::vector<std::string>& playerSettings)
     :m_snake{pos, dir}, m_playerSettings{playerSettings}

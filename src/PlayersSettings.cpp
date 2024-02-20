@@ -62,46 +62,31 @@ std::vector<std::vector<std::string>> PlayersSettings::parsePlayersSettingFile(c
     return playerSettings;
 }
 
-std::vector<Player> PlayersSettings::generatePLayerSettings(const std::string& fileName, int playersAmount)
+std::vector<Player> PlayersSettings::generatePLayerSettings(const std::string& fileName, const std::vector<Point>& playersInitPos)
 {
-    std::vector<std::vector<std::string>> playersSettingsData { parsePlayersSettingFile(fileName, playersAmount) };
+    std::vector<std::vector<std::string>> playersSettingsData { parsePlayersSettingFile(fileName,
+                                                   static_cast<int>(playersInitPos.size())) };
 
     std::vector<Player> playersSettings{};
-
-    int pos{2};
-
+    std::vector emptySettings {"1", "1", "1", "1"};
     for(size_t i{0}; i < playersSettingsData.size(); ++i)
     {
-        playersSettings.emplace_back( Point{pos, pos},
-                                     Snake::Direction::down,
-                                     playersSettingsData[i] );
-        pos += 3;
+        if(!isSettingsEmpty(playersSettingsData[i]))
+        {
+            playersSettings.emplace_back( playersInitPos[i],
+                                          Snake::Direction::down,
+                                          playersSettingsData[i] );
+        }
+        else
+        {
+            return {};
+        }
     }
 
     return playersSettings;
 }
 
-int PlayersSettings::getPlayersAmount(const std::string& fileName)
+bool PlayersSettings::isSettingsEmpty(const std::vector<std::string>& settings)
 {
-    std::fstream settingsFile { fileName };
-
-    if (!settingsFile.is_open())
-        assert(0 && "failed to open playerSettingFile in parsePlayerSettings()");
-
-    std::string line{};
-
-    while (std::getline(settingsFile, line))
-    {
-        size_t playersAmountValueIndex { line.find("Players amount:") };
-        if(playersAmountValueIndex != std::string::npos)
-        {
-            int value { stoi(line.substr(playersAmountValueIndex + 16)) };
-
-            return value;
-        }
-        else
-        {
-            assert(0 && "Players amount value not found");
-        }
-    }
+    return settings[MOVEMENT_KEYS] == "1";
 }

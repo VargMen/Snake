@@ -41,9 +41,10 @@ private:
 
     Menus handleEvent(const Event& event) override;
 
-    static void makeGame();
+    static bool makeGame();
 
     void display() const override;
+
 };
 
 #endif //STARTMENU_H

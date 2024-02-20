@@ -12,27 +12,98 @@ Game::Game()
 {
     std::vector<int> settingsValue { SettingsMenu::parseSettingFile("../settings.txt") };
 
-    m_defaultPlayersSettings = PlayersSettings::generatePLayerSettings("../playersSettings.txt",
-                                                                       settingsValue[SettingsMenu::PLAYERS_AMOUNT]);
-    m_players = m_defaultPlayersSettings;
-
     setDifficulty(settingsValue[SettingsMenu::DIFFICULTY]);
 
-    m_winGame = newwin(settings::height, settings::width, settings::bias_x, settings::bias_y);
-    m_winScore = newwin(settings::height, 30, 1 + settings::bias_x, settings::width + 2 + settings::bias_y); //30 is size for window with score and etc
+    setBoard(settingsValue[SettingsMenu::LEVEL]);
+
+    setPlayers(settingsValue[SettingsMenu::PLAYERS_AMOUNT]);
+
+    setWindows();
+
+    setThemes(settingsValue[SettingsMenu::THEME]);
+
+    applyColors();
+}
+
+void Game::setBoard(int levelIndex)
+{
+    setMaps();
+    m_currentMapIndex = levelIndex;
+
+    m_mapHeight = m_maps[m_currentMapIndex].m_height;
+    m_mapWidth  = m_maps[m_currentMapIndex].m_width;
+    m_board = Board{m_maps[m_currentMapIndex].m_mapFilePath, m_mapWidth, m_mapHeight};
+}
+
+void Game::setPlayers(int playersAmount)
+{
+    m_defaultPlayersSettings = PlayersSettings::generatePLayerSettings("../playersSettings.txt",
+                                                                       makePlayersInitPos(playersAmount));
+    if(m_defaultPlayersSettings.empty())
+    {
+        isGameSet = false;
+    }
+
+    m_players = m_defaultPlayersSettings;
+}
+
+
+void Game::setWindows()
+{
+    int bias_x = 0;
+    int bias_y = 0;
+
+    int maxScoreWin_x{};
+    int maxScoreWin_y{};
+    getmaxyx(stdscr, maxScoreWin_y, maxScoreWin_x);
+
+    m_winGame = newwin(m_mapHeight, m_mapWidth, bias_x, bias_y);
+    m_winScore = newwin(m_mapHeight, maxScoreWin_x - m_mapWidth, 1 + bias_x, m_mapWidth + 2 + bias_y); //30 is size for window with score and etc
 
     nodelay(stdscr, TRUE);
     scrollok(stdscr, TRUE);
 
     refresh();
     refreshWindow();
-
-    GraphicsSettings::setTheme(m_winGame, settingsValue[3]);
-    GraphicsSettings::setTheme(m_winScore, settingsValue[3]);
-    GraphicsSettings::setTheme(stdscr, settingsValue[3]);
-
-    applyColors();
 }
+
+void Game::setThemes(int themeIndex)
+{
+    GraphicsSettings::setTheme(m_winGame, themeIndex);
+    GraphicsSettings::setTheme(m_winScore, themeIndex);
+    GraphicsSettings::setTheme(stdscr, themeIndex);
+}
+
+std::vector<Point> Game::makePlayersInitPos(int playersAmount)
+{
+    std::vector<Point> playersInitPos{};
+
+    for(std::size_t i{0}; i < playersAmount; ++i) {
+        while (1) {                             //Here we are trying to find a position that is not occupied
+            Point playerPos{ makeRandomPoint() };
+
+            auto it{std::find(playersInitPos.begin(), playersInitPos.end(), playerPos)};
+
+            if (it == playersInitPos.end()) {
+                playersInitPos.emplace_back(playerPos);
+                break;
+            }
+        }
+    }
+    return playersInitPos;
+}
+
+Point Game::makeRandomPoint()
+{
+    std::cout << "\nAboba here\n";
+    while(1) //we are trying to find a position where there is no wall
+    {
+        Point p{ Random::get(1, m_mapHeight - 1) , Random::get(1, m_mapWidth - 1)};
+        if(!m_board.isPosWall(p))
+            return p;
+    }
+}
+
 
 void Game::applyColors()
 {
@@ -44,6 +115,13 @@ void Game::applyColors()
         ++playerColorIndex;
     }
 
+}
+
+void Game::setMaps()
+{
+    m_maps.emplace_back("../Maps/10x23.txt", 23, 10 );
+    m_maps.emplace_back("../Maps/12x31.txt", 31, 12 );
+    m_maps.emplace_back("../Maps/21x40.txt", 40, 21 );
 }
 
 Game::~Game()
@@ -103,16 +181,16 @@ int Game::getAnswer()
 
 void Game::printMessageToPlayAgain()
 {
-    wmove(m_winScore, 6 , 0);
+    wmove(m_winScore, m_mapHeight - 3 , 0);
     wprintw(m_winScore, "Write 'y' and try again >:D");
-    wmove(m_winScore, 8 , 0);
+    wmove(m_winScore, m_mapHeight - 1 , 0);
     wprintw(m_winScore, "or 'n' otherwise :(");
     wrefresh(m_winScore);
 }
 
 void Game::restartGame()
 {
-    m_board = Board{settings::mapPath};
+    m_board = Board{m_maps[m_currentMapIndex].m_mapFilePath, m_mapWidth, m_mapHeight};
 
     m_players = m_defaultPlayersSettings;
 
@@ -196,9 +274,9 @@ void Game::displayState()
 {
     clearWindow(); //I do this because "You lose!" is still printed after we restart
 
-    for (int i {0}; i < settings::height; ++i)
+    for (int i {0}; i < m_mapHeight; ++i)
     {
-        for (int j {0}; j < settings::width; ++j)
+        for (int j {0}; j < m_mapWidth; ++j)
         {
             spawnOnBoard(Point{i, j}, static_cast<char>(m_board.getCellValue( Point{i, j} )));
         }
@@ -288,7 +366,7 @@ void Game::spawnOnBoard(const Point& point, char index)
     switch(index)
     {
         case Board::MapSymbols::wall:
-            mvwaddch(m_winGame, point.x, point.y, ' ');
+            mvwaddch(m_winGame, point.x, point.y, '#');
             break;
         case Board::MapSymbols::space:
             mvwaddch(m_winGame, point.x, point.y, ' ');
@@ -307,13 +385,23 @@ void Game::spawnOnBoard(const Point& point, char index)
 
 void Game::printScore()
 {
-    int bias{0};
+    int bias_y{0};
+    int bias_x{0};
 
     for(int i{0}; i < m_players.size(); i++)
     {
-        wmove(m_winScore, i + bias , 0);
+        wmove(m_winScore, bias_y , bias_x);
         wprintw(m_winScore, "%s: %d", m_players[i].getName().c_str(), m_players[i].getSnakeScore());
-        bias += 2;
+
+        if(bias_y != 10)
+        {
+            bias_y += 2;
+        }
+        else
+        {
+            bias_y = 0;
+            bias_x += 12;
+        }
     }
 }
 
@@ -384,7 +472,8 @@ void Game::saveScores(const std::vector<Score>& newScores, const char* scoresFil
 
 void Game::setDifficulty(int difficulty)
 {
+    difficulty += 1;
     m_pauseTime = 300 / difficulty;
-    m_pauseTimeReduceStep = 10 + difficulty * 2;
+    m_pauseTimeReduceStep = 12 + difficulty * 2;
     m_smallestPauseTime = 200 / difficulty;
 }

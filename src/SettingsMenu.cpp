@@ -10,9 +10,14 @@ SettingsMenu::SettingsMenu()
 
     assert(choicesValues.size() == m_choices.size() - 1 && "Bad amount of choices values in SettingsMenu()");
 
-    for(const auto& value: choicesValues)
+    setChoicesValue(choicesValues);
+}
+
+void SettingsMenu::setChoicesValue(const std::vector<int>& values)
+{
+    for(std::size_t i{0}; i < values.size(); ++i)
     {
-        m_choicesValues.emplace_back(value);
+        m_choicesValues.emplace_back(values[i]);
     }
 }
 
@@ -68,11 +73,13 @@ Menus SettingsMenu::handleEvent(const Event& event)
                     break;
 
                 case Choices::LEVEL:
+                    handleChangesValue(getIntChoiceValue(LEVEL), 0, 2);
+                    break;
                 case Choices::DIFFICULTY:
-                    handleChangesValue(getIntChoiceValue(m_currentChoice), 1, 4);
+                    handleChangesValue(getIntChoiceValue(DIFFICULTY), 0, 3);
                     break;
                 case Choices::THEME:
-                    handleChangesThemes(getIntChoiceValue(m_currentChoice), 1, 4);
+                    handleChangesThemes(getIntChoiceValue(THEME), 1, 4);
                     break;
 
                 case PLAYERS_SETTINGS:
@@ -123,7 +130,32 @@ void SettingsMenu::display() const
 
 
         wmove(m_win, m_height/2, 3);
-        mvwprintw(m_win, m_height/2 + i, 2, "%s: %d", m_choices[i].c_str(), getConstIntChoiceValue(i));
+
+        wattroff(m_win, A_REVERSE);
+        mvwprintw(m_win, m_height/2 + i, 2, "                        ");
+
+        if (i == m_highlight)
+            wattron(m_win, A_REVERSE);
+
+        if(i != Choices::DIFFICULTY)
+        {
+            mvwprintw(m_win, m_height/2 + i, 2, "%s: %d", m_choices[i].c_str(), getConstIntChoiceValue(i));
+
+            if(getConstIntChoiceValue(Choices::DIFFICULTY) == IMPOSSIBLE)
+            {
+                printFunnyMessage();
+            }
+            else
+            {
+                clearFunnyMessage();
+            }
+        }
+
+        else
+        {
+            mvwprintw(m_win, m_height/2 + i, 2, "%s: %s", m_choices[i].c_str(), m_difficultysStr[ getConstIntChoiceValue(i)]);
+        }
+
         wattroff(m_win, A_REVERSE);
     }
 
@@ -131,6 +163,21 @@ void SettingsMenu::display() const
         wattron(m_win, A_REVERSE);
     mvwprintw(m_win, m_height/2 + i + 2, 2, "%s", m_choices[i].c_str());
     wattroff(m_win, A_REVERSE);
+}
+
+void SettingsMenu::clearFunnyMessage() const
+{
+    wattroff(m_win, A_REVERSE);
+    mvwprintw(m_win, m_height/2 + 2, 30, "                                               ");
+    mvwprintw(m_win, m_height/2 + 3, 30, "                                               ");
+
+}
+
+void SettingsMenu::printFunnyMessage() const
+{
+    wattroff(m_win, A_REVERSE);
+    mvwprintw(m_win, m_height/2 + 2, 30, "If you can get 40 score on this difficulty,");
+    mvwprintw(m_win, m_height/2 + 3, 30, " you can consider yourself worthy");
 }
 
 void SettingsMenu::changeValue(int& value, int minValue, int maxValue)

@@ -1,4 +1,4 @@
-Players amount: 3
-Level: 6
-Difficulty: 1
-Theme: 1
+Players amount: 7
+Level: 2
+Difficulty: 2
+Theme: 2

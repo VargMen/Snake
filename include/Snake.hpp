@@ -31,11 +31,9 @@ public:
     Snake& operator=(const Snake& snake) = default;
 
 
-
     friend Direction operator-(const Direction& dir);
 
     void updateDir(const Direction& dir);
-
 
 
     Point newHeadPos();
@@ -43,13 +41,11 @@ public:
     void moveSnake();
 
 
-
     void levelUp();
 
     bool isAte(const Point& food_pos) const { return m_snakePos.front() == food_pos; }
 
     bool isHitItself() const;
-
 
 
     int getScore() const { return m_score; }

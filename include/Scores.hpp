@@ -27,7 +27,9 @@ public:
     void updateScores(const std::vector<Score>& newScores);
 
 private:
+
     std::vector<Score> parseScores(std::fstream& scoreFile);
+
     void saveScores(const std::vector<Score>& scores,
                     const char* scoreFilePath);
 

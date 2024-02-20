@@ -27,10 +27,8 @@ public:
 
     static std::vector<std::vector<std::string>> parsePlayersSettingFile(const std::string& fileName, int playersAmount);
 
-    static std::vector<Player> generatePLayerSettings(const std::string& fileName, int playersAmount);
+    static std::vector<Player> generatePLayerSettings(const std::string& fileName, const std::vector<Point>& playersInitPos);
 
-    static int getPlayersAmount(const std::string& fileName);
-
-    static int setPlayersAmount();
+    static bool isSettingsEmpty(const std::vector<std::string>& settings);
 };
 #endif //PLAYERSSETTINGS_H

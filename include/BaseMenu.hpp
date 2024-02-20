@@ -6,8 +6,6 @@
 #include <string>
 #include <variant>
 
-#include <iostream>
-
 #include "GraphicsSettings.hpp"
 
 enum Event
@@ -56,6 +54,8 @@ protected:
 
     virtual Menus handleEvent(const Event& event) = 0;
 
+
+
     int& getIntChoiceValue(int index);
 
     int getConstIntChoiceValue(int index) const;
@@ -64,9 +64,13 @@ protected:
 
     std::string getConstStrChoiceValue(int index) const;
 
-    void applyTheme(short themeIndex);
+
 
     virtual int getIndexValue(int value) const { return -1; };
+
+
+
+    void applyTheme(short themeIndex);
 
 protected:
 

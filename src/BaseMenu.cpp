@@ -29,6 +29,18 @@ Event BaseMenu::handleInput()
                 ++m_highlight;
             break;
 
+        case 'd':
+        case KEY_RIGHT:
+            if (m_highlight + 32 <= m_choices.size() - 1)
+                m_highlight += 32;
+            break;
+
+        case 'a':
+        case KEY_LEFT:
+            if (m_highlight - 32 > -1)
+                m_highlight -= 32;
+            break;
+
         case 10: //10 means KEY_ENTER
             return ENTER_PRESSED;
 

@@ -1,11 +1,8 @@
 #ifndef BOARD_H
 #define BOARD_H
 
-#include <string_view>
-
 #include "Snake.hpp"
 #include "Point.hpp"
-#include "settings.hpp"
 
 class Board
 {
@@ -18,8 +15,9 @@ public:
 
         max_mapSymbols = 99
     };
+    Board(const std::string& mapName, int width, int height);
 
-    explicit Board(std::string_view mapName) { initByMap(mapName); }
+    Board() = default;
 
     void initByMap(std::string_view mapName);
 
@@ -36,9 +34,11 @@ public:
     void eraseBoard();
 
 private:
-    int m_board[settings::height][settings::width]{};
-    int m_clearBoard[settings::height][settings::width]{};
-};
+    int m_height{};
+    int m_width{};
 
+    std::vector<std::vector<int>> m_board{};
+    std::vector<std::vector<int>> m_clearBoard{};
+};
 
 #endif //BOARD_H

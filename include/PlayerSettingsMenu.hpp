@@ -41,6 +41,8 @@ private:
 
     static void setPlayersAmount(int playersAmount) { m_playersAmount = playersAmount; }
 
+    void setChoicesValue(const std::vector<std::string>& values);
+
 
 
     Menus handleEvent(const Event& event) override;
@@ -50,18 +52,15 @@ private:
     void handleChangesStringValue(int stringValueIndex, int maxStrSize);
 
 
-
     void display() const override;
+
 
     void changeValue(int& value, int minValue, int maxValue);
 
     void changeStringValue(int stringValueIndex, int maxBufferSize);
 
+
     std::string getInputStr(int bufferSize);
-
-
-
-    void setChoicesValue(const std::vector<std::string>& values);
 
     int getIndexValue(int index) const override;
 
@@ -74,7 +73,7 @@ private:
     static bool m_isSettingSaved;
     static constexpr char* m_colorsStr[] {"Black", "Red", "Green", "Yellow", "Blue",
                                           "Magenta", "Cyan", "White", "Orange", "Grey"};
-    int m_colorIndex{1};
+    int m_colorIndex{};
 };
 
 #endif //PLAYERSETTINGSMENU_H

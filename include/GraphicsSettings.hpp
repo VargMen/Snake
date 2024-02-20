@@ -11,22 +11,6 @@
 class GraphicsSettings
 {
 public:
-    enum Colors
-    {
-        GREEN,
-        BLUE,
-        RED,
-        YELLOW,
-        GRAY,
-        ORANGE,
-        WHITE,
-        BLACK,
-        CYAN,
-        MAGENTA,
-
-        max_snake_colors
-    };
-
     enum MyColors
     {
         MyCOLOR_ORANGE = 10,
@@ -51,11 +35,17 @@ public:
     };
 
     static void color_mvwaddch(WINDOW* win, int move_y, int move_x, int color_pair, const char symbol);
+
     static void color_mvwprintw(WINDOW* win, int move_y, int move_x, int color_pair, const char* format, ...);
 
+
     static void setThemeValue(const char* settingsFilePath);
-    static void initColors();
+
     static void setTheme(WINDOW* win, short themeIndex);
+
+    static void initColors();
+
+
     static std::vector<std::pair<int, int>> colorPairs;
     static short m_backgroundColor;
     static short m_currentColorPair;

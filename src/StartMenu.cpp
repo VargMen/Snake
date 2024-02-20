@@ -18,8 +18,11 @@ Menus StartMenu::handleEvent(const Event& event)
             switch(m_currentChoice)
             {
                 case Choices::PLAY:
-                    clearWindow();
-                    makeGame();
+                    if(!makeGame())
+                    {
+                        mvwprintw(m_win, m_height/2, m_width/2 - 35, "Please specify the settings for each player");
+                        wgetch(m_win);
+                    }
                     setDefault();
                     return max_menus;
 
@@ -38,13 +41,23 @@ Menus StartMenu::handleEvent(const Event& event)
     return max_menus;
 }
 
-void StartMenu::makeGame()
+bool StartMenu::makeGame()
 {
     Game g;
-    g.startGame();
+    if(g.isGameSet)
+    {
+        g.startGame();
 
-    g.refreshWindow();
+        g.refreshWindow();
+
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 }
+
 
 void StartMenu::display() const
 {
